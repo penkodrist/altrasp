@@ -1,0 +1,22 @@
+{
+  "name": "bincol-rasp-parser",
+  "version": "0.0.1",
+  "description": "parser",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^1.7.7",
+    "colors": "^1.4.0",
+    "express": "^4.19.2",
+    "jsdom": "^25.0.0",
+    "socks-proxy-agent": "^8.0.4"
+  },
+  "devDependencies": {
+    "terser": "^5.33.0"
+  }
+}
