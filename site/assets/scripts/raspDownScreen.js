@@ -1,4 +1,7 @@
 let isAvailable
+let raspDownScreen = document.querySelector('.raspDownScreen')
+let raspDownWrapper = document.querySelector('.raspDownWrapper')
+let closeRaspDownBtn = document.querySelector('.closeRaspDownBtn')
 fetch('/api/status')
     .then(res => res.text())
     .then(data => isAvailable = data)
@@ -6,16 +9,17 @@ fetch('/api/status')
 
 function availCheck() {
     if (isAvailable === 'false') {
-        document.querySelector('.raspDownScreen').style.opacity = '1'
-        document.querySelector('.closeRaspDownBtn').addEventListener('click', () => {
-            document.querySelector('.raspDownScreen').style.opacity = '0'
-            document.querySelector('.raspDownWrapper').style.transform = 'scale(0.95)'
+        raspDownScreen.style.opacity = '1'
+        raspDownScreen.style.pointerEvents = 'auto'
+        closeRaspDownBtn.addEventListener('click', () => {
+            raspDownScreen.style.opacity = '0'
+            raspDownWrapper.style.transform = 'scale(0.95)'
             setTimeout(() => {
-                document.querySelector('.raspDownScreen').remove()
+                raspDownScreen.remove()
             }, 250)
         })
     } else if (isAvailable === 'true' || isAvailable === "") {
-        document.querySelector('.raspDownScreen').remove()
+        raspDownScreen.remove()
     }
 }
 

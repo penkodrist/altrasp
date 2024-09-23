@@ -53,14 +53,16 @@ let formedData = ``
 let processedData = ``
 
 let newDate
-let updateDate = `нет информации / расписание недоступно`
+let updateDate = fsp.readFile(path.join(__dirname, `updateDate.txt`), 'utf8')
 
 let isAvailable
 
 let reqHTML
 let resData
 
-// Main data for script
+// ---------------------------------------------------------------------- //
+
+// Main variables for parsing
 
 // proxy: 46.241.20.54:4145 - SOCKS4
 // default: https://bincol.ru/rasp/view.php?id=00301
@@ -70,6 +72,8 @@ let connectionInterval = 300000
 let axiosTimeout = 30000
 let serverPort = 3000
 let socksUrl = 'socks4://46.241.20.54:4145'
+
+// ---------------------------------------------------------------------- //
 
 const agent = new SocksProxyAgent(socksUrl)
 const axiosInstance = axios.create({
@@ -138,12 +142,13 @@ async function fetchSite(url) {
         isAvailable = true
         console.log(successLabel, 'Data received.')
     } catch (err) {
+        isAvailable = false
         if (err) {
-            isAvailable = false
-            console.log(errorLabel, 'Connection is unsuccessful. Error code:', err.code)
+            console.log(errorLabel, 'Unknown error. Error code:', err.code)
         } else if (err.code === "ETIMEDOUT") {
-            isAvailable = false
             console.log(errorLabel, 'Connection has timed out')
+        } else if (err.code === 'undefined') {
+            console.log(errorLabel, 'Proxy is unreachable')
         }
         return err
     }
@@ -183,7 +188,6 @@ async function parseData(data) {
             return
         }
         // Объяснение: если строчка содержит данные о сегодняшнем/завтрашнем и т. д. дне, то мы добавляем эту дату как объект в массив subjectsArray, а затем добавляем +1 к dateIndex, в ином случае, указывается значение 0
-        // TODO: сделать проверку через переменную, а не через возвращение данных через функцию
         if ((curTd.innerHTML).slice(13) === formDate(dateIndex)) {
             rowIndex = 0
             prevDateIndex = dateIndex
@@ -208,7 +212,6 @@ async function parseData(data) {
             } else {
                 subjGroup = "нет информации"
             }
-            // TODO: Баг, при котором индекс запрашиваемого дня недели не может выйти на 6, так как идет вычитание из dateIndex, который априори не может быть больше 6
             subjectsArray[formDate(prevDateIndex)] = {
                 ...subjectsArray[formDate(prevDateIndex)],
                 [rowIndex]: {
@@ -222,13 +225,19 @@ async function parseData(data) {
             rowIndex++
         }
     })
-    // console.log(subjectsArray)
-    // console.log(infoLabel, "Parsing process completed successfully and located above.")
 }
 function formComponents() {
     dateIndex = new Date().getDay()
     newDate = new Date()
     updateDate = `${String(newDate.getDate()).padStart(2, '0')}.${String(newDate.getMonth()).padStart(2, '0')}.${String(newDate.getFullYear())} ${String(newDate.getHours()).padStart(2, '0')}:${String(newDate.getMinutes()).padStart(2, '0')} (GMT+3)`
+    console.log(infoLabel, newDate.getTimezoneOffset())
+    fs.writeFile(path.join(__dirname, 'updateDate.txt'), updateDate, (err) => {
+        if (err) {
+            console.log(errorLabel, 'Update date was not written:', err)
+        } else {
+            console.log(successLabel, 'Update date was successfully written')
+        }
+    })
     for (let i = 0; i < Object.keys(subjectsArray).length; i++) {
         formedData = ``
         processedData = ``
@@ -274,8 +283,6 @@ function formComponents() {
                 `
             formedData = formedData + processedData
         }
-
-        // console.log(infoLabel, 'Is formedData undefined?..', formedData === undefined)
         fs.writeFileSync(`./site/components/${i}.html`, formedData, (err) => {
             if (err) {
                 console.log(errorLabel, 'File was not written: ', err)

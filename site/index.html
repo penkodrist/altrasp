@@ -12,7 +12,11 @@
 </head>
 <body>
     <div class="appDiv">
-        <div class="deployedVer">0.7.1b, build 22092024_01_update19_patch</div>
+        <div class="deployedVer">0.8.0b, build 23092024_01_update21</div>
+        <div class="loadingScreen">
+            <img alt="logoMin" src="./assets/imgs/logo_min.svg">
+            <img alt="logoLoader" src="./assets/imgs/ring-resize.svg">
+        </div>
         <div class="warningScreen">
             <div class="warnContentWrapper">
                 <img alt="utya1" src="./assets/imgs/utya_indev.webp">
@@ -90,6 +94,15 @@
     window.addEventListener("resize", () => {
         pos = parseInt(getComputedStyle(document.querySelector('.appDiv')).width) * 0.5 - dv.getBoundingClientRect().width * 0.5 + 'px'
         dv.style.left = pos
+    })
+</script>
+<script>
+    window.addEventListener("load", () => {
+        let loadingScreen = document.querySelector('.loadingScreen')
+        loadingScreen.style.opacity = 0
+        setTimeout(() => {
+            loadingScreen.remove()
+        }, 250)
     })
 </script>
 </html>

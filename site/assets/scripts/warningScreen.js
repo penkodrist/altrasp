@@ -24,4 +24,5 @@ function warnScreenEvent (thisBtn) {
 }
 window.addEventListener("load", () => {
     warnScreen.style.opacity = '1'
+    warnScreen.style.pointerEvents = 'auto'
 })
