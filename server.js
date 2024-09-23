@@ -53,7 +53,8 @@ let formedData = ``
 let processedData = ``
 
 let newDate
-let updateDate = fsp.readFile(path.join(__dirname, `updateDate.txt`), 'utf8')
+let updateDate
+fsp.readFile(path.join(__dirname, `updateDate.txt`), 'utf8').then(data => updateDate = data)
 
 let isAvailable
 
@@ -144,11 +145,9 @@ async function fetchSite(url) {
     } catch (err) {
         isAvailable = false
         if (err) {
-            console.log(errorLabel, 'Unknown error. Error code:', err.code)
+            console.log(errorLabel, 'Unknown error or proxy is unreachable. Error code:', err.code)
         } else if (err.code === "ETIMEDOUT") {
             console.log(errorLabel, 'Connection has timed out')
-        } else if (err.code === 'undefined') {
-            console.log(errorLabel, 'Proxy is unreachable')
         }
         return err
     }
