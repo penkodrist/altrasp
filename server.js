@@ -65,14 +65,14 @@ let resData
 
 // Main variables for parsing
 
-// proxy: 46.241.20.54:4145 - SOCKS4
+// proxy: socks5://zXhBvW:CBKHfx@88.218.73.128:9426
 // default: https://bincol.ru/rasp/view.php?id=00301
 
 let targetUrl = 'https://bincol.ru/rasp/view.php?id=00301'
 let connectionInterval = 300000
-let axiosTimeout = 30000
+let axiosTimeout = 40000
 let serverPort = 3000
-let socksUrl = 'socks4://46.241.20.54:4145'
+let socksUrl = 'socks5://zXhBvW:CBKHfx@88.218.73.128:9426'
 
 // ---------------------------------------------------------------------- //
 
@@ -228,8 +228,7 @@ async function parseData(data) {
 function formComponents() {
     dateIndex = new Date().getDay()
     newDate = new Date()
-    updateDate = `${String(newDate.getDate()).padStart(2, '0')}.${String(newDate.getMonth()).padStart(2, '0')}.${String(newDate.getFullYear())} ${String(newDate.getHours()).padStart(2, '0')}:${String(newDate.getMinutes()).padStart(2, '0')} (GMT+3)`
-    console.log(infoLabel, newDate.getTimezoneOffset())
+    updateDate = `${String(newDate.getDate()).padStart(2, '0')}.${String(newDate.getMonth() + 1).padStart(2, '0')}.${String(newDate.getFullYear())} ${String(newDate.getHours()).padStart(2, '0')}:${String(newDate.getMinutes()).padStart(2, '0')} (GMT+3)`
     fs.writeFile(path.join(__dirname, 'updateDate.txt'), updateDate, (err) => {
         if (err) {
             console.log(errorLabel, 'Update date was not written:', err)
