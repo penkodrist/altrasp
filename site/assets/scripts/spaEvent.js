@@ -51,7 +51,12 @@ function spaEvent (target, type) {
 
 function spaChange (target) {
     subjectSchedule.innerHTML = ''
-    fetch(`/api/spa?target=${target}`)
+    fetch(`/api/spa?target=${target}`, {
+        method: 'GET',
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
         .then(res => res.json())
         .then(data => {
             subjectSchedule.style.opacity = '1'

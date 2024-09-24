@@ -65,6 +65,7 @@ html, body {
     transition-duration: 1s;
     transition-timing-function: cubic-bezier(.06,.93,0,.98);
     transition-property: padding;
+    position: relative;
     .loadingScreen {
         display: flex;
         flex-direction: column;
@@ -571,6 +572,37 @@ html, body {
         .dropdownWrapper {
             transform: scaleY(1);
             opacity: 1;
+        }
+    }
+    .errorScreen {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: center;
+        gap: 10px;
+        box-sizing: border-box;
+        padding: 10%;
+        .errorCode {
+            font-size: 7.5rem;
+            font-weight: 700;
+            color: #363648
+        }
+        .errorDesc {
+            color: #363648
+        }
+        a {
+            color: #484899;
+            text-decoration: underline;
+            text-decoration-color: transparent;
+            transition: .2s ease;
+        }
+        a:hover {
+            text-decoration-color: #484899;
         }
     }
 }

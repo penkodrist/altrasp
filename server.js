@@ -1,6 +1,5 @@
 const colors = require('colors');
 const express = require('express')
-const https = require('https');
 const axios = require('axios')
 const { JSDOM } = require('jsdom')
 const fs = require('fs')
@@ -15,39 +14,15 @@ let infoLabel = '[INFO]'.bgBlue.black
 let errorLabel = '[ERROR]'.bgRed.black
 let successLabel = '[SUCCESS]'.bgGreen.black
 
-let dom
-let dBTBody
-let subjRow
-
-let subjNum
-let subjName
-let subjAuditory
-let subjTeacher
-let subjGroup
-
+let dom, dBTBody, subjRow
+let subjNum, subjName, subjAuditory, subjTeacher, subjGroup
 let curTd
-
 let subjectsArray = {}
 let rowIndex = 0
 let dateIndex
 let prevDateIndex
-
-let tableHeaders = [
-    'Пара',
-    'Предмет',
-    'Аудитория',
-    'Преподаватель',
-    'Подгруппа'
-]
-let weekdays = [
-    'Воскресенье',
-    'Понедельник',
-    'Вторник',
-    'Среда',
-    'Четверг',
-    'Пятница',
-    'Суббота',
-]
+let tableHeaders = [ 'Пара', 'Предмет', 'Аудитория', 'Преподаватель', 'Подгруппа' ]
+let weekdays = [ 'Воскресенье', 'Понедельник', 'Вторник', 'Среда',  'Четверг', 'Пятница', 'Суббота' ]
 
 let formedData = ``
 let processedData = ``
@@ -86,19 +61,27 @@ const axiosInstance = axios.create({
 app.use(express.static('site'));
 
 console.log(infoLabel, "Server started")
+
 app.listen(serverPort, function () {
     console.log(successLabel, 'Server successfully started on port: ' + String(serverPort).bold)
 })
-app.get('/api/spa', async (req, res) => {
+
+const checkValidity = (req, res, next) => {
+    if (req.headers['x-requested-with'] === 'XMLHttpRequest') {
+        next()
+    } else {
+        res.status(403).sendFile(path.join(__dirname, 'site', 'components', '403.html'))
+    }
+}
+
+app.get('/api/spa', checkValidity, async (req, res) => {
     try {
-        let target = req.query.target
-        reqHTML = await fsp.readFile(path.join(__dirname, 'site', 'components', `${target}.html`), 'utf8').catch(async (err) => {
-            reqHTML = await fsp.readFile(path.join(__dirname, 'site', 'components', '404.html'), 'utf8')
-            sendData()
-        })
+        reqHTML = await fsp.readFile(path.join(__dirname, 'site', 'components', `${req.query.target}.html`), 'utf8')
         sendData()
     } catch (err) {
         console.log(errorLabel, `Client tried to make fetch(), but it was incorrect...? Aborted: ${req.ip}`)
+        reqHTML = await fsp.readFile(path.join(__dirname, 'site', 'components', '404.html'), 'utf8')
+        sendData()
     }
     function sendData() {
         resData = {
@@ -108,7 +91,7 @@ app.get('/api/spa', async (req, res) => {
         res.send(resData)
     }
 })
-app.get('/api/status', (req, res) => {
+app.get('/api/status', checkValidity, (req, res) => {
     try {
         res.send(isAvailable)
     } catch (err) {
@@ -166,27 +149,13 @@ async function parseData(data) {
             }
         })
     })
-
-    // dateIndex возвращает индекс текущего дня недели:
-    // 0 — Воскресенье
-    // 1 — Понедельник
-    // 2 — Вторник
-    // 3 — Среда
-    // 4 — Четверг
-    // 5 — Пятница
-    // 6 — Суббота
-
-    // tr - ряд; td - ячейка
-
     dateIndex = new Date().getDay()
-
     dBTBody.querySelectorAll('tr').forEach(tr => {
         if (!(tr.querySelector('td') === null || tr.querySelector('td') === undefined)) {
             curTd = tr.querySelector('td')
         } else {
             return
         }
-        // Объяснение: если строчка содержит данные о сегодняшнем/завтрашнем и т. д. дне, то мы добавляем эту дату как объект в массив subjectsArray, а затем добавляем +1 к dateIndex, в ином случае, указывается значение 0
         if ((curTd.innerHTML).slice(13) === formDate(dateIndex)) {
             rowIndex = 0
             prevDateIndex = dateIndex
@@ -292,7 +261,6 @@ function formComponents() {
             dateIndex++
         }
     }
-
     console.log(successLabel, 'Fetch script ended, recorded updateDate:', `${updateDate}`.bold)
 }
 function formDate(index) {
