@@ -4,22 +4,22 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <title>AltRasp</title>
-    <link href="./assets/styles/default.css" rel="stylesheet">
-    <link rel="apple-touch-icon" sizes="180x180" href="./assets/imgs/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="./assets/imgs/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="./assets/imgs/favicon-16x16.png">
+    <link href="./private/assets/styles/default.css" rel="stylesheet">
+    <link rel="apple-touch-icon" sizes="180x180" href="./private/assets/imgs/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="./private/assets/imgs/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="./private/assets/imgs/favicon-16x16.png">
     <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="appDiv">
-        <div class="deployedVer">0.8.2b, build 24092024_01_update23</div>
+        <div class="deployedVer">0.9.1_25</div>
         <div class="loadingScreen">
-            <img alt="logoMin" src="./assets/imgs/logo_min.svg">
-            <img alt="logoLoader" src="./assets/imgs/ring-resize.svg">
+            <img alt="logoMin" src="./private/assets/imgs/logo_min.svg">
+            <img alt="logoLoader" src="./private/assets/imgs/ring-resize.svg">
         </div>
         <div class="warningScreen">
             <div class="warnContentWrapper">
-                <img alt="utya1" src="./assets/imgs/utya_indev.webp">
+                <img alt="utya1" src="./private/assets/imgs/utya_indev.webp">
                 <div class="warningTextWrapper">
                     <div class="warningHeader">Сайт находится в разработке</div>
                     <div class="warningDesc">На данный момент возможны проблемы с определением расписания, захода на сайт, а также отсутствие некоторых функций. Не мешайте Уте работать 🥺</div>
@@ -32,7 +32,7 @@
         </div>
         <div class="raspDownScreen">
             <div class="raspDownWrapper">
-                <img alt="utya2" src="./assets/imgs/utya_classic.webp">
+                <img alt="utya2" src="./private/assets/imgs/utya_classic.webp">
                 <div class="raspDownTextWrapper">
                     <div class="raspDownHeader">Расписание или прокси опять легло!</div>
                     <div class="raspDownDesc">В моменте последней проверки не удалось получить данные расписания. Возможно, проблема не в расписании. На данный момент отображена информация за последнее обновление.</div>
@@ -46,30 +46,23 @@
         <div class="verticalLayoutWrapper">
             <div class="headerContainer">
                 <div class="logo">
-                    <img alt="logo" src="./assets/imgs/logo.svg">
-                </div>
-                <div class="latestInfo">
-                    <span class="latestText">Информация за</span>
-                    <span class="latestDate">
-                        <span class="loader" data-update-date-loader></span>
-                        <span class="date" data-update-date>0</span>
-                    </span>
+                    <img alt="logo" src="./private/assets/imgs/logo.svg">
                 </div>
             </div>
             <div class="navBar">
                 <div class="navBtn toggled" data-href="subjectsSchedule">
-                    <img alt="calendar" src="./assets/imgs/calendar.svg">
+                    <img alt="calendar" src="./private/assets/imgs/calendar.svg">
                     Расписание занятий
-                    <img alt="down" src="./assets/imgs/down.svg">
+                    <img alt="down" src="./private/assets/imgs/down.svg">
                 </div>
                 <div class="navBtn" data-href="subjectsCalls" spa-target="rb">
-                    <img alt="bell" src="./assets/imgs/bell.svg">
+                    <img alt="bell" src="./private/assets/imgs/bell.svg">
                     Расписание звонков
                 </div>
             </div>
             <div class="componentContainer">
                 <div class="noSubjectsScreen">
-                    <img alt="utya3" src="./assets/imgs/utya_confused.webp">
+                    <img alt="utya3" src="./private/assets/imgs/utya_confused.webp">
                     <div class="h1">Пар не было найдено</div>
                     <div class="h2">Возможно, данные пока не обновились</div>
                 </div>
@@ -78,31 +71,49 @@
 
                 </div>
             </div>
+            <div class="latestInfo">
+                <span class="latestText">Информация за</span>
+                <span class="latestDate">
+                        <span class="loader" data-update-date-loader></span>
+                        <span class="date" data-update-date>0</span>
+                    </span>
+            </div>
         </div>
     </div>
 </body>
-<script src="./assets/scripts/spaEvent.js"></script>
+<script src="./private/assets/scripts/spaEvent.js"></script>
 <script async>spaEvent("0")</script>
-<script src="./assets/scripts/navRadio.js"></script>
-<script src="./assets/scripts/ddown.js"></script>
-<script src="./assets/scripts/warningScreen.js"></script>
-<script src="./assets/scripts/raspDownScreen.js"></script>
-<script async>
-    let dv = document.querySelector('.deployedVer')
-    let pos = parseInt(getComputedStyle(document.querySelector('.appDiv')).width) * 0.5 - dv.getBoundingClientRect().width * 0.5 + 'px'
-    dv.style.left = pos
-    window.addEventListener("resize", () => {
-        pos = parseInt(getComputedStyle(document.querySelector('.appDiv')).width) * 0.5 - dv.getBoundingClientRect().width * 0.5 + 'px'
-        dv.style.left = pos
-    })
-</script>
-<script>
+<script src="./private/assets/scripts/navRadio.js"></script>
+<script src="./private/assets/scripts/ddown.js"></script>
+<script src="./private/assets/scripts/warningScreen.js"></script>
+<script src="./private/assets/scripts/raspDownScreen.js"></script>
+<script data-self-remove="1">
     window.addEventListener("load", () => {
         let loadingScreen = document.querySelector('.loadingScreen')
         loadingScreen.style.opacity = 0
         setTimeout(() => {
             loadingScreen.remove()
+            setTimeout(() => { document.querySelector('[data-self-remove="1"]').remove() }, 100)
         }, 250)
     })
+</script>
+<script data-self-remove="2">
+    window.addEventListener("load", () => {
+        let headerContainer = document.querySelector('.headerContainer')
+        let downloadButtonHTML =
+            `
+            <img alt="android" src="./private/assets/imgs/android.svg">
+            Скачать .apk
+            `
+        let downloadButtonObject = document.createElement('a')
+        downloadButtonObject.setAttribute("href", "/app")
+        downloadButtonObject.className = 'downloadApp'
+        downloadButtonObject.innerHTML = downloadButtonHTML
+        if ((window.navigator.userAgent.indexOf("Android") > -1 && window.navigator.userAgent.indexOf("Build") > -1 ) !== true) {
+            if (window.navigator.userAgent.indexOf("Win64") > -1)  { return }
+            headerContainer.appendChild(downloadButtonObject)
+        }
+    })
+    setTimeout(() => { document.querySelector('[data-self-remove="2"]').remove() }, 100)
 </script>
 </html>

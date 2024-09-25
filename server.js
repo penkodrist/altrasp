@@ -36,20 +36,11 @@ let isAvailable
 let reqHTML
 let resData
 
-// ---------------------------------------------------------------------- //
-
-// Main variables for parsing
-
-// proxy: socks5://zXhBvW:CBKHfx@88.218.73.128:9426
-// default: https://bincol.ru/rasp/view.php?id=00301
-
 let targetUrl = 'https://bincol.ru/rasp/view.php?id=00301'
 let connectionInterval = 300000
 let axiosTimeout = 40000
 let serverPort = 3000
 let socksUrl = 'socks5://zXhBvW:CBKHfx@88.218.73.128:9426'
-
-// ---------------------------------------------------------------------- //
 
 const agent = new SocksProxyAgent(socksUrl)
 const axiosInstance = axios.create({
@@ -57,6 +48,24 @@ const axiosInstance = axios.create({
     httpAgent: agent,
     proxy: false,
 })
+
+app.use('/private', (req, res, next) => {
+    const referer = req.get('Referer');
+    if (!referer) {
+        console.log(errorLabel, 'Referer header was not found, somebody tried to get access to files with URL')
+        return res.status(403).sendFile(path.join(__dirname, 'site', 'private', 'components', '403.html'));
+    }
+    next();
+});
+
+app.use('/downloadables', (req, res, next) => {
+    const referer = req.get('Referer');
+    if (!referer) {
+        console.log(errorLabel, 'Referer header was not found, somebody tried to get access to files with URL')
+        return res.status(403).sendFile(path.join(__dirname, 'site', 'private', 'components', '403.html'));
+    }
+    next();
+});
 
 app.use(express.static('site'));
 
@@ -76,11 +85,11 @@ const checkValidity = (req, res, next) => {
 
 app.get('/api/spa', checkValidity, async (req, res) => {
     try {
-        reqHTML = await fsp.readFile(path.join(__dirname, 'site', 'components', `${req.query.target}.html`), 'utf8')
+        reqHTML = await fsp.readFile(path.join(__dirname, 'site', 'private', 'components', `${req.query.target}.html`), 'utf8')
         sendData()
     } catch (err) {
         console.log(errorLabel, `Client tried to make fetch(), but it was incorrect...? Aborted: ${req.ip}`)
-        reqHTML = await fsp.readFile(path.join(__dirname, 'site', 'components', '404.html'), 'utf8')
+        reqHTML = await fsp.readFile(path.join(__dirname, 'site', 'private', 'components', '404.html'), 'utf8')
         sendData()
     }
     function sendData() {
@@ -94,6 +103,13 @@ app.get('/api/spa', checkValidity, async (req, res) => {
 app.get('/api/status', checkValidity, (req, res) => {
     try {
         res.send(isAvailable)
+    } catch (err) {
+        console.log(errorLabel, `Incorrect GET was sent, aborted! IP-address of GET: ${req.ip}`)
+    }
+})
+app.get('/app', (req, res) => {
+    try {
+        res.sendFile(path.join(__dirname, 'site', 'app.html'))
     } catch (err) {
         console.log(errorLabel, `Incorrect GET was sent, aborted! IP-address of GET: ${req.ip}`)
     }
@@ -220,7 +236,7 @@ function formComponents() {
                             <div class="subjectName">${subjectsArray[formDate(dateIndex)][String(j)]["subjName"]}</div>
                             <div class="subjectInfoPart">
                                 <div class="infoIcon">
-                                    <img alt="teacher" src="./assets/imgs/teacher.svg">
+                                    <img alt="teacher" src="./private/assets/imgs/teacher.svg">
                                 </div>
                                 <div class="infoText">
                                     <div class="subjectInfoPartHeader">Преподаватель</div>
@@ -229,7 +245,7 @@ function formComponents() {
                             </div>
                             <div class="subjectInfoPart">
                                 <div class="infoIcon">
-                                    <img alt="teacher" src="./assets/imgs/auditory.svg">
+                                    <img alt="teacher" src="./private/assets/imgs/auditory.svg">
                                 </div>
                                 <div class="infoText">
                                     <div class="subjectInfoPartHeader">Аудитория</div>
@@ -238,7 +254,7 @@ function formComponents() {
                             </div>
                             <div class="subjectInfoPart">
                                 <div class="infoIcon">
-                                    <img alt="teacher" src="./assets/imgs/group.svg">
+                                    <img alt="teacher" src="./private/assets/imgs/group.svg">
                                 </div>
                                 <div class="infoText">
                                     <div class="subjectInfoPartHeader">Подгруппа</div>
@@ -250,7 +266,7 @@ function formComponents() {
                 `
             formedData = formedData + processedData
         }
-        fs.writeFileSync(`./site/components/${i}.html`, formedData, (err) => {
+        fs.writeFileSync(`./site/private/components/${i}.html`, formedData, (err) => {
             if (err) {
                 console.log(errorLabel, 'File was not written: ', err)
             }
