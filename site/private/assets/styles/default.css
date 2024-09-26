@@ -25,6 +25,9 @@ html, body {
             flex-direction: column !important;
         }
     }
+    .latestInfo {
+        margin-bottom: 10px;
+    }
 }
 @media screen and (max-width: 526px) {
     .navBtn {
@@ -50,6 +53,9 @@ html, body {
         .ringTime {
             font-size: 0.9rem !important;
         }
+    }
+    .latestInfo {
+        margin-bottom: 0 !important;
     }
 }
 
@@ -504,7 +510,7 @@ html, body {
             align-items: center;
             justify-content: flex-start;
             flex-direction: row;
-            transition: opacity .25s ease;
+            transition: opacity, margin-bottom .25s cubic-bezier(.06,.93,0,.98);
             .latestText, .latestDate .date {
                 color: #363648 !important;
                 text-align: end;
@@ -619,16 +625,22 @@ html, body {
         .errorCode {
             font-size: 7.5rem;
             font-weight: 700;
-            color: #363648
+            color: #363648;
+            opacity: 0;
+            animation: flyIn .25s ease forwards .2s;
         }
         .errorDesc {
-            color: #363648
+            color: #363648;
+            opacity: 0;
+            animation: flyIn .25s ease forwards .3s;
         }
         a {
             color: #484899;
             text-decoration: underline;
             text-decoration-color: transparent;
             transition: .2s ease;
+            opacity: 0;
+            animation: flyIn .25s ease forwards .4s;
         }
         a:hover {
             text-decoration-color: #484899;
@@ -645,6 +657,16 @@ html, body {
     }
 }
 @keyframes fadeIn-fromLeft {
+    0% {
+        opacity: 0;
+        transform: translateX(-10px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+@keyframes flyIn {
     0% {
         opacity: 0;
         transform: translateX(-10px);

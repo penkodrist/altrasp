@@ -79,9 +79,21 @@ const checkValidity = (req, res, next) => {
     if (req.headers['x-requested-with'] === 'XMLHttpRequest') {
         next()
     } else {
-        res.status(403).sendFile(path.join(__dirname, 'site', 'components', '403.html'))
+        res.status(403).sendFile(path.join(__dirname, 'site', 'private', 'components', '403.html'))
     }
 }
+
+app.get('*', async (req, res, next) => {
+    let isErr
+    if (!(req.headers['x-requested-with'] === 'XMLHttpRequest')) {
+        await fsp.readFile(`${path.join(__dirname, 'site') + req.url}`).catch(err => isErr = err)
+    }
+    if (isErr) {
+        res.status(404).sendFile(path.join(__dirname, 'site', 'private', 'components', '404gl.html'))
+    } else {
+        next()
+    }
+})
 
 app.get('/api/spa', checkValidity, async (req, res) => {
     try {
