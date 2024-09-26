@@ -85,9 +85,11 @@ const checkValidity = (req, res, next) => {
 
 app.get('*', async (req, res, next) => {
     let isErr
-    if (!(req.headers['x-requested-with'] === 'XMLHttpRequest') || !(req.get('Referer'))) {
+    console.log(req.get('Referer'))
+    if (!(req.headers['x-requested-with'] === 'XMLHttpRequest')) {
         await fsp.readFile(`${path.join(__dirname, 'site') + req.url}`).catch(err => isErr = err)
     }
+    if (req.url === '/app') { isErr = null }
     if (isErr) {
         res.status(404).sendFile(path.join(__dirname, 'site', 'private', 'components', '404gl.html'))
     } else {
