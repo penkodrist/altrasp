@@ -5,6 +5,9 @@ let dateText = document.querySelector('[data-update-date]')
 let noSubjFoundScreen = document.querySelector('.noSubjectsScreen')
 let subjectSchedule = document.querySelector('.subjectSchedule')
 let latestInfo = document.querySelector('.latestInfo')
+let latestInfoHeightBuffer
+latestInfoHeightBuffer = latestInfo.scrollHeight + 'px'
+latestInfo.style.height = latestInfoHeightBuffer
 let dateUpdateStatus = false
 sTargets.forEach(e => {
     e.addEventListener("click", function () {
@@ -29,8 +32,12 @@ function spaEvent (target, type) {
             noSubjFoundScreen.style.opacity = '0'
             if (type === true) {
                 latestInfo.style.opacity = '0'
+                latestInfo.style.height = '0px'
+                latestInfo.style.marginTop = '0px'
             } else {
                 latestInfo.style.opacity = '1'
+                latestInfo.style.marginTop = ''
+                latestInfo.style.height = latestInfoHeightBuffer
             }
             setTimeout(() => { spaChange(target) }, 250)
         }, 2000)
@@ -43,8 +50,12 @@ function spaEvent (target, type) {
     noSubjFoundScreen.style.opacity = '0'
     if (type === true) {
         latestInfo.style.opacity = '0'
+        latestInfo.style.height = '0px'
+        latestInfo.classList.add('hidden')
     } else {
         latestInfo.style.opacity = '1'
+        latestInfo.style.height = latestInfoHeightBuffer
+        latestInfo.classList.remove('hidden')
     }
     setTimeout(() => { spaChange(target) }, 250)
 }

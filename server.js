@@ -10,9 +10,15 @@ const { SocksProxyAgent } = require('socks-proxy-agent')
 let app = express()
 let data = ''
 
-let infoLabel = '[INFO]'.bgBlue.black
-let errorLabel = '[ERROR]'.bgRed.black
-let successLabel = '[SUCCESS]'.bgGreen.black
+let infoLabel = `[ INFO ]`.bgBlue.black
+let errorLabel = `[ ERROR ]`.bgRed.black
+let successLabel = `[ SUCCESS ]`.bgGreen.black
+let statusLabel = `[ STATUS ]`.bgYellow.black
+function consoleLog(errorType, message) {
+    let logsDate = new Date()
+    let logDateString = `${String(logsDate.getDate()).padStart(2, '0')}.${String(logsDate.getMonth() + 1).padStart(2, '0')}.${String(logsDate.getFullYear())} ${String(logsDate.getHours()).padStart(2, '0')}:${String(logsDate.getMinutes()).padStart(2, '0')}:${String(logsDate.getSeconds()).padStart(2, '0')}`
+    console.log(`[ ${logDateString.bold} ] ${errorType} ${message}`)
+}
 
 let dom, dBTBody, subjRow
 let subjNum, subjName, subjAuditory, subjTeacher, subjGroup
@@ -52,27 +58,27 @@ const axiosInstance = axios.create({
 app.use('/private', (req, res, next) => {
     const referer = req.get('Referer');
     if (!referer) {
-        console.log(errorLabel, 'Referer header was not found, somebody tried to get access to files with URL')
+        consoleLog(errorLabel, `Referer header was not found, somebody tried to get access to files with URL: ${req}`)
         return res.status(403).sendFile(path.join(__dirname, 'site', 'private', 'components', '403.html'));
     }
     next();
 });
-
 app.use('/downloadables', (req, res, next) => {
     const referer = req.get('Referer');
     if (!referer) {
-        console.log(errorLabel, 'Referer header was not found, somebody tried to get access to files with URL')
+        consoleLog(errorLabel, 'Referer header was not found, somebody tried to get access to files with URL')
         return res.status(403).sendFile(path.join(__dirname, 'site', 'private', 'components', '403.html'));
     }
     next();
 });
-
 app.use(express.static('site'));
-
-console.log(infoLabel, "Server started")
-
+app.use((req, res, next) => {
+    consoleLog(statusLabel, `IP: ${String(req.socket.remoteAddress).slice(7).bold} | UserAgent: ${req.headers['user-agent'].bold}`)
+    next()
+})
+consoleLog(infoLabel, "Server started")
 app.listen(serverPort, function () {
-    console.log(successLabel, 'Server successfully started on port: ' + String(serverPort).bold)
+    consoleLog(successLabel, 'Server successfully started on port: ' + String(serverPort).bold)
 })
 
 const checkValidity = (req, res, next) => {
@@ -82,7 +88,6 @@ const checkValidity = (req, res, next) => {
         res.status(403).sendFile(path.join(__dirname, 'site', 'private', 'components', '403.html'))
     }
 }
-
 app.get('*', async (req, res, next) => {
     let isErr
     if (!(req.headers['x-requested-with'] === 'XMLHttpRequest')) {
@@ -95,13 +100,12 @@ app.get('*', async (req, res, next) => {
         next()
     }
 })
-
 app.get('/api/spa', checkValidity, async (req, res) => {
     try {
         reqHTML = await fsp.readFile(path.join(__dirname, 'site', 'private', 'components', `${req.query.target}.html`), 'utf8')
         sendData()
     } catch (err) {
-        console.log(errorLabel, `Client tried to make fetch(), but it was incorrect...? Aborted: ${req.ip}`)
+        consoleLog(errorLabel, `Client tried to make fetch(), but it was incorrect...? Aborted: ${req.ip}`)
         reqHTML = await fsp.readFile(path.join(__dirname, 'site', 'private', 'components', '404.html'), 'utf8')
         sendData()
     }
@@ -117,29 +121,33 @@ app.get('/api/status', checkValidity, (req, res) => {
     try {
         res.send(isAvailable)
     } catch (err) {
-        console.log(errorLabel, `Incorrect GET was sent, aborted! IP-address of GET: ${req.ip}`)
+        consoleLog(errorLabel, `Incorrect GET was sent, aborted! IP-address of GET: ${req.ip}`)
     }
 })
 app.get('/app', (req, res) => {
     try {
         res.sendFile(path.join(__dirname, 'site', 'app.html'))
     } catch (err) {
-        console.log(errorLabel, `Incorrect GET was sent, aborted! IP-address of GET: ${req.ip}`)
+        consoleLog(errorLabel, `Incorrect GET was sent, aborted! IP-address of GET: ${req.ip}`)
     }
 })
 
 fetchSite(targetUrl).then((err) => {
     if (!err) {
-        parseData(data).then(() => {
-            formComponents()
+        parseData(data).then((err) => {
+            if (!err) {
+                formComponents()
+            }
         })
     }
 })
 setInterval(() => {
     fetchSite(targetUrl).then((err) => {
         if (!err) {
-            parseData(data).then(() => {
-                formComponents()
+            parseData(data).then((err) => {
+                if (!err) {
+                    formComponents()
+                }
             })
         }
     })
@@ -147,19 +155,19 @@ setInterval(() => {
 
 async function fetchSite(url) {
     try {
-        console.log(infoLabel, "Trying to receive HTML from:", url.green.underline)
-        const response = await axiosInstance.get(url, {
+        consoleLog(infoLabel, "Trying to receive HTML from:", url.green.underline)
+        const response = await axios.get(url, {
             timeout: axiosTimeout
         })
         data = response.data
         isAvailable = true
-        console.log(successLabel, 'Data received.')
+        consoleLog(successLabel, 'Data received.')
     } catch (err) {
         isAvailable = false
         if (err) {
-            console.log(errorLabel, 'Unknown error or proxy is unreachable. Error code:', err.code)
+            consoleLog(errorLabel, 'Unknown error or proxy is unreachable. Error code:', err.code)
         } else if (err.code === "ETIMEDOUT") {
-            console.log(errorLabel, 'Connection has timed out')
+            consoleLog(errorLabel, 'Connection has timed out')
         }
         return err
     }
@@ -168,6 +176,11 @@ async function parseData(data) {
     dom = new JSDOM(data);
     const doc = dom.window.document
     dBTBody = doc.body.querySelector('table tbody')
+    if (dBTBody === null) {
+        consoleLog(errorLabel, 'Caught data being null. Waiting next parse in 5 minutes.')
+        isAvailable = false
+        return err = "err"
+    }
     dBTBody.removeChild(dBTBody.querySelector('tr:nth-child(1)'))
     dBTBody.querySelectorAll('tr').forEach(tr => {
         tr.querySelectorAll('td').forEach(e => {
@@ -229,9 +242,9 @@ function formComponents() {
     updateDate = `${String(newDate.getDate()).padStart(2, '0')}.${String(newDate.getMonth() + 1).padStart(2, '0')}.${String(newDate.getFullYear())} ${String(newDate.getHours()).padStart(2, '0')}:${String(newDate.getMinutes()).padStart(2, '0')} (GMT+3)`
     fs.writeFile(path.join(__dirname, 'updateDate.txt'), updateDate, (err) => {
         if (err) {
-            console.log(errorLabel, 'Update date was not written:', err)
+            consoleLog(errorLabel, 'Update date was not written:', err)
         } else {
-            console.log(successLabel, 'Update date was successfully written')
+            consoleLog(successLabel, 'Update date was successfully written')
         }
     })
     for (let i = 0; i < Object.keys(subjectsArray).length; i++) {
@@ -281,7 +294,7 @@ function formComponents() {
         }
         fs.writeFileSync(`./site/private/components/${i}.html`, formedData, (err) => {
             if (err) {
-                console.log(errorLabel, 'File was not written: ', err)
+                consoleLog(errorLabel, 'File was not written: ', err)
             }
         })
         if (dateIndex === 6) {
@@ -290,7 +303,7 @@ function formComponents() {
             dateIndex++
         }
     }
-    console.log(successLabel, 'Fetch script ended, recorded updateDate:', `${updateDate}`.bold)
+    consoleLog(successLabel, `Fetch script ended, recorded updateDate: ${updateDate.bold}`)
 }
 function formDate(index) {
     return `${weekdays[index]}`

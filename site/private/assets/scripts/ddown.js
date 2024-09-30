@@ -31,8 +31,8 @@ dropdownObj.className = "dropdownWrapper"
 dropdownObj.appendChild(dropdownList)
 
 let daysArray = {
-    0: "Сегодня",
-    1: "Завтра",
+    0: "",
+    1: "",
     2: "",
     3: "",
     4: "",
@@ -41,16 +41,14 @@ let daysArray = {
 }
 
 let newDate = new Date()
-let curDay = newDate.getDate() + 1
+let curDay = newDate.getDate()
 let curMonth = newDate.getMonth() + 1
 let curYear = newDate.getFullYear()
 let curMonthLength = new Date(curYear, curMonth, 0).getDate()
 
-for (let i = 2; i <= 6; i++) {
-    if (curDay !== curMonthLength) {
-        curDay++
-        daysArray[i] = `${String(curDay).padStart(2, '0')}.${String(curMonth).padStart(2, '0')}.${String(curYear)}`
-    } else {
+for (let i = 0; i <= 6; i++) {
+    daysArray[i] = `${String(curDay).padStart(2, '0')}.${String(curMonth).padStart(2, '0')}.${String(curYear)}`
+    if (curDay === curMonthLength) {
         curDay = 1
         if (curMonth + 1 === 13) {
             curMonth = 1
@@ -58,9 +56,12 @@ for (let i = 2; i <= 6; i++) {
         } else {
             curMonth++
         }
-        daysArray[i] = `${String(curDay).padStart(2, '0')}.${String(curMonth).padStart(2, '0')}.${String(curYear)}`
+    } else {
+        curDay++
     }
 }
+daysArray[0] = `Сегодня`
+daysArray[1] = `Завтра`
 
 for (let i = 0; i < Object.keys(daysArray).length; i++) {
     let dayBtn = document.createElement("div")

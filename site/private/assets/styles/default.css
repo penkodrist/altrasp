@@ -25,8 +25,10 @@ html, body {
             flex-direction: column !important;
         }
     }
-    .latestInfo {
-        margin-bottom: 10px;
+    .verticalLayoutWrapper {
+        .latestInfo {
+            margin-bottom: 10px !important;
+        }
     }
 }
 @media screen and (max-width: 526px) {
@@ -34,11 +36,20 @@ html, body {
         font-size: 0.8rem !important;
         text-align: center;
     }
-    .scheduleSubjectItem, .dayBtn, .latestInfo, .warningScreen, .raspDownScreen {
+    .scheduleSubjectItem, .dayBtn, .warningScreen, .raspDownScreen {
         font-size: 0.8rem !important;
     }
     .verticalLayoutWrapper {
-        gap: 20px !important;
+        .headerContainer, .navBar {
+            margin-bottom: 20px !important;
+        }
+        .latestInfo {
+            margin-top: 20px !important;
+            margin-bottom: 0 !important;
+            .latestText, .latestDate, .date {
+                font-size: 0.8rem !important;
+            }
+        }
     }
     .ringPartContainer {
         .ringPartGrid {
@@ -191,7 +202,18 @@ html, body {
         width: 100%;
         height: 100%;
         max-width: 600px;
-        gap: 30px;
+        .headerContainer, .navBar {
+            margin-bottom: 30px;
+        }
+        .headerContainer, .navBar, .latestInfo {
+            transition-property: margin-top, margin-bottom, opacity !important;
+            transition-duration: .25s !important;
+            transition-timing-function: cubic-bezier(.06,.93,0,.98) !important;
+        }
+        .latestInfo.hidden {
+            margin-top: 0 !important;
+            min-height: 0 !important;
+        }
         .headerContainer {
             display: flex;
             align-items: center;
@@ -382,6 +404,9 @@ html, body {
                                 }
                             }
                         }
+                        .subjectName, .subjectInfoPart {
+                            transition: font-size .25s cubic-bezier(.06,.93,0,.98);
+                        }
                     }
                 }
             }
@@ -510,12 +535,18 @@ html, body {
             align-items: center;
             justify-content: flex-start;
             flex-direction: row;
-            transition: opacity, margin-bottom .25s cubic-bezier(.06,.93,0,.98);
+            overflow: hidden;
+            margin-top: 30px;
+            min-height: 20px;
+            max-height: 20px;
+            transition: opacity, margin-bottom, height, min-height .25s cubic-bezier(.06,.93,0,.98);
             .latestText, .latestDate .date {
                 color: #363648 !important;
                 text-align: end;
                 align-items: end;
                 justify-content: end;
+                font-size: 1rem;
+                transition: all .25s cubic-bezier(.06,.93,0,.98);
             }
             .latestDate {
                 display: flex;
