@@ -78,7 +78,7 @@ app.use((req, res, next) => {
 })
 consoleLog(infoLabel, "Server started")
 app.listen(serverPort, function () {
-    consoleLog(successLabel, 'Server successfully started on port: ' + String(serverPort).bold)
+    consoleLog(successLabel, `Server successfully started on port: ${String(serverPort).bold}`)
 })
 
 const checkValidity = (req, res, next) => {
@@ -155,8 +155,8 @@ setInterval(() => {
 
 async function fetchSite(url) {
     try {
-        consoleLog(infoLabel, "Trying to receive HTML from:", url.green.underline)
-        const response = await axios.get(url, {
+        consoleLog(infoLabel, `Trying to receive HTML from: ${url.green.underline}`)
+        const response = await axiosInstance.get(url, {
             timeout: axiosTimeout
         })
         data = response.data
@@ -165,7 +165,7 @@ async function fetchSite(url) {
     } catch (err) {
         isAvailable = false
         if (err) {
-            consoleLog(errorLabel, 'Unknown error or proxy is unreachable. Error code:', err.code)
+            consoleLog(errorLabel, `Unknown error or proxy is unreachable. Error code: ${err.code}`)
         } else if (err.code === "ETIMEDOUT") {
             consoleLog(errorLabel, 'Connection has timed out')
         }
@@ -242,7 +242,7 @@ function formComponents() {
     updateDate = `${String(newDate.getDate()).padStart(2, '0')}.${String(newDate.getMonth() + 1).padStart(2, '0')}.${String(newDate.getFullYear())} ${String(newDate.getHours()).padStart(2, '0')}:${String(newDate.getMinutes()).padStart(2, '0')} (GMT+3)`
     fs.writeFile(path.join(__dirname, 'updateDate.txt'), updateDate, (err) => {
         if (err) {
-            consoleLog(errorLabel, 'Update date was not written:', err)
+            consoleLog(errorLabel, `Update date was not written: ${err}`)
         } else {
             consoleLog(successLabel, 'Update date was successfully written')
         }
@@ -294,7 +294,7 @@ function formComponents() {
         }
         fs.writeFileSync(`./site/private/components/${i}.html`, formedData, (err) => {
             if (err) {
-                consoleLog(errorLabel, 'File was not written: ', err)
+                consoleLog(errorLabel, `File was not written: ${err}`)
             }
         })
         if (dateIndex === 6) {
