@@ -55,13 +55,14 @@ const axiosInstance = axios.create({
     proxy: false,
 })
 
-app.use('/private', (req, res, next) => {
+app.use('/private', checkReferer, express.static(path.join(__dirname, 'private')));
+function checkReferer(req, res, next) {
     const referer = req.get('Referer');
     if (!referer) {
         return res.status(403).sendFile(path.join(__dirname, 'site', 'private', 'components', '403.html'));
     }
     next();
-});
+}
 app.use('/downloadables', (req, res, next) => {
     const referer = req.get('Referer');
     if (!referer) {
@@ -165,7 +166,7 @@ async function fetchSite(url) {
         isAvailable = false
         if (err) {
             consoleLog(errorLabel, `Unknown error or proxy is unreachable. Error code: ${err.code}`)
-        } else if (err.code === "ETIMEDOUT") {
+        } else if (err.code === "ECONNABORTED") {
             consoleLog(errorLabel, 'Connection has timed out')
         }
         return err
