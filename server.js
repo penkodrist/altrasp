@@ -73,7 +73,7 @@ app.use('/downloadables', (req, res, next) => {
 });
 app.use(express.static('site'));
 app.use((req, res, next) => {
-    consoleLog(statusLabel, `IP: ${String((req.headers['x-forwarded-for'] || req.socket.remoteAddress || '').split(',')[0].trim()).bold} | UserAgent: ${req.headers['user-agent'].bold}`)
+    consoleLog(statusLabel, `IP: ${String((req.headers['x-forwarded-for'] || req.socket.remoteAddress || '').split(',')[0].trim()).bold} | UserAgent: ${String(req.headers['user-agent']).bold}`)
     next()
 })
 consoleLog(infoLabel, "Server started")
