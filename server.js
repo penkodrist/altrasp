@@ -58,7 +58,6 @@ const axiosInstance = axios.create({
 app.use('/private', (req, res, next) => {
     const referer = req.get('Referer');
     if (!referer) {
-        consoleLog(errorLabel, `Referer header was not found, somebody tried to get access to files with URL: ${req}`)
         return res.status(403).sendFile(path.join(__dirname, 'site', 'private', 'components', '403.html'));
     }
     next();
