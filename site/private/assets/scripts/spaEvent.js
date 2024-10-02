@@ -29,7 +29,6 @@ function spaEvent (target, type) {
             subjLoader.style.opacity = '1'
             dateText.style.opacity = '0'
             dateLoader.style.opacity = '1'
-            noSubjFoundScreen.style.opacity = '0'
             if (type === true) {
                 latestInfo.style.opacity = '0'
                 latestInfo.style.height = '0px'
@@ -47,7 +46,6 @@ function spaEvent (target, type) {
     subjLoader.style.opacity = '1'
     dateText.style.opacity = '0'
     dateLoader.style.opacity = '1'
-    noSubjFoundScreen.style.opacity = '0'
     if (type === true) {
         latestInfo.style.opacity = '0'
         latestInfo.style.height = '0px'
@@ -74,11 +72,7 @@ function spaChange (target) {
             subjLoader.style.opacity = '0'
             dateText.style.opacity = '1'
             dateLoader.style.opacity = '0'
-            if (data.html.length === 0) {
-                noSubjFoundScreen.style.opacity = '1'
-            } else {
-                subjectSchedule.innerHTML = data.html
-            }
+            subjectSchedule.innerHTML = data.html
             dateText.innerText = data.updateDate
         })
 }

@@ -292,6 +292,16 @@ function formComponents() {
                 `
             formedData = formedData + processedData
         }
+        if (formedData.length < 1) {
+            formedData =
+                `
+                <div class="noSubjectsScreen">
+                    <img alt="utya3" src="./private/assets/imgs/utya_confused.webp">
+                    <div class="h1">Пар не было найдено</div>
+                    <div class="h2">Возможно, данные пока не обновились</div>
+                </div>
+                `
+        }
         fs.writeFileSync(`./site/private/components/${i}.html`, formedData, (err) => {
             if (err) {
                 consoleLog(errorLabel, `File was not written: ${err}`)

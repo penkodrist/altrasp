@@ -12,6 +12,32 @@ html, body {
     -webkit-tap-highlight-color:  rgba(255, 255, 255, 0);
 }
 
+@media screen and (max-width: 560px) {
+    .appDiv {
+        .adaptiveLayout {
+            .appCardHeader {
+                margin-bottom: 25px !important;
+                a {
+                    font-size: 0.8rem !important;
+                }
+            }
+            .mainHeader {
+                font-size: 1.5rem !important;
+            }
+            .mainDesc {
+                font-size: 0.8rem !important;
+                margin-bottom: 25px !important;
+            }
+            .downloadBtn {
+                font-size: 0.8rem !important;
+            }
+            .fileInfo {
+                font-size: 0.8rem !important;
+            }
+        }
+    }
+}
+
 .appDiv {
     display: flex;
     justify-content: center;
@@ -34,12 +60,13 @@ html, body {
             align-items: center;
             justify-content: space-between;
             margin-bottom: 50px;
+            transition: margin-bottom .25s cubic-bezier(.35,0,0,1);
             img {
                 width: 128px;
             }
             a {
                 margin-left: 8px;
-                transition: .2s ease;
+                transition: .25s cubic-bezier(.35,0,0,1);
                 color: #484899;
                 text-decoration: underline;
                 text-decoration-color: transparent;
@@ -52,9 +79,11 @@ html, body {
             font-size: 2.5rem;
             font-weight: 700;
             margin-bottom: 10px;
+            transition: .25s cubic-bezier(.35,0,0,1);
         }
         .mainDesc {
             margin-bottom: 50px;
+            transition: all .25s cubic-bezier(.35,0,0,1);
         }
         .downloadBtn {
             display: flex;
@@ -68,7 +97,7 @@ html, body {
             border-radius: 10px;
             font-weight: 400;
             cursor: pointer;
-            transition: .2s ease;
+            transition: .2s cubic-bezier(.35,0,0,1);
             margin-bottom: 10px;
         }
         .downloadBtn:hover {
@@ -83,10 +112,11 @@ html, body {
             flex-direction: row;
             align-items: center;
             justify-content: flex-start;
+            transition: .25s cubic-bezier(.35,0,0,1);
             color: #363648;
             a {
                 margin-left: 8px;
-                transition: .2s ease;
+                transition: color, text-decoration-color .25s cubic-bezier(.35,0,0,1);
                 color: #484899;
                 text-decoration: underline;
                 text-decoration-color: transparent;
