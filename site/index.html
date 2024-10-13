@@ -1,4 +1,4 @@
-<html lang=en>
+<html lang=en theme="nord">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport"
@@ -12,30 +12,129 @@
 </head>
 <body>
     <div class="appDiv">
-        <div class="deployedVer">0.9.4_28</div>
         <div class="loadingScreen">
             <img alt="logoMin" src="./private/assets/imgs/logo_min.svg">
             <img alt="logoLoader" src="./private/assets/imgs/ring-resize.svg">
+            <div class="longLoad">
+                Еще немного...
+            </div>
         </div>
-        <div class="raspDownScreen">
-            <div class="raspDownWrapper">
-                <img alt="utya2" src="./private/assets/imgs/utya_classic.webp">
-                <div class="raspDownTextWrapper">
-                    <div class="raspDownHeader">Расписание опять легло!</div>
-                    <div class="raspDownDesc">В моменте последней проверки не удалось получить данные расписания. На данный момент отображена информация за последнее обновление.</div>
-                    <div class="closeRaspDownWrapper">
-                        <div class="btn2 closeRaspDownBtn">Ясно</div>
+        <div class="ddDateScreenWrapper"></div>
+        <div class="ddGlobalScreenWrapper"></div>
+        <div class="selectGroupScreenWrapper">
+            <div class="selectGroupContainer">
+                <div class="sg-header-container">
+                    <div class="sg-header">
+                        <div class="sg-text">Выберите группу</div>
+                        <div class="sg-last-indexing">
+                            <span>Последняя индексация групп: </span>
+                            <span>7 октября</span>
+                        </div>
+                    </div>
+                    <div class="sg-close-btn">Закрыть</div>
+                </div>
+                <label class="sg-search-field">
+                    <input type="text" placeholder="Поиск" tabindex="0">
+                </label>
+                <div class="sg-groups-container-wrapper">
+                    <div class="sg-groups-loader">
+                        <img alt="loader" src="./private/assets/imgs/ring-resize.svg">
+                    </div>
+                    <div class="sg-groups-container"></div>
+                </div>
+            </div>
+        </div>
+        <div class="settingsScreenWrapper">
+            <div class="settingsWindow">
+                <div class="sw-header">
+                    <span>Настройки</span>
+                    <span class="closeSW">Закрыть</span>
+                </div>
+                <div class="sw-options">
+                    <div class="sw-option-wrapper">
+                        <div class="sw-option">
+                            Внешний вид
+                            <img class="collapse" alt="collapse" src="./private/assets/imgs/collapse.svg">
+                        </div>
+                        <div class="sw-option-content-wrapper">
+                            <div class="sw-option-content">
+                                <div class="sw-option-option">
+                                    <div class="soo-header">Тема</div>
+                                    <div class="soo-desc">Цветовая схема, которая будет использоваться на сайте</div>
+                                    <div class="soo-inter">
+                                        <div class="gl-dd" dd-this-layer="31" dd-type="themes" dd-ls-name="sel-theme">
+                                            <span class="selected-gl-dd">Nord (по умолчанию)</span>
+                                            <span class="collapse-icon">
+                                                <img alt="collapse-dd" src="./private/assets/imgs/collapse.svg">
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="sw-option-wrapper">
+                        <div class="sw-option">
+                            Настройки расписания
+                            <img class="collapse" alt="collapse" src="./private/assets/imgs/collapse.svg">
+                        </div>
+                        <div class="sw-option-content-wrapper">
+                            <div class="sw-option-content">
+                                <div class="sw-option-option">
+                                    <div class="soo-header">Выбранная группа</div>
+                                    <div class="soo-desc">Группа, которую Вы выбираете для отображения на сайте при загрузке. После выбора группы расписание будет обновлено.</div>
+                                    <div class="soo-inter">
+                                        <div class="chgr-screen-btn">
+                                            <span class="selectedGr">31БТС</span>
+                                            <span class="collapse-icon">
+                                                <img alt="collapse" src="./private/assets/imgs/collapse.svg">
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="sw-option-wrapper">
+                        <div class="sw-option">
+                            О сайте
+                            <img class="collapse" alt="collapse" src="./private/assets/imgs/collapse.svg">
+                        </div>
+                        <div class="sw-option-content-wrapper">
+                            <div class="sw-option-content">
+                                <div class="sw-option-option">
+                                    <div class="soo-header">Версия</div>
+                                    <div class="soo-desc">0.10.0</div>
+                                </div>
+                                <div class="sw-option-option">
+                                    <div class="soo-header">Билд</div>
+                                    <div class="soo-desc">29</div>
+                                </div>
+                                <div class="sw-option-option">
+                                    <div class="soo-header">GitHub</div>
+                                    <a href="https://github.com/penkodrist/altrasp" class="soo-desc">Ссылка</a>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="ddScreenWrapper"></div>
         <div class="verticalLayoutWrapper">
             <div class="headerContainer">
                 <div class="logo">
-                    <img alt="logo" src="./private/assets/imgs/logo.svg">
+                    <img alt="logo" src="./private/assets/imgs/logo_min.svg">
+                    AltRasp
                 </div>
+                <div class="openSW">
+                    <img alt="settings" src="./private/assets/imgs/settings.svg">
+                </div>
+                <div class="currentGroup"></div>
             </div>
+            <span class="raspDownHint">
+                <h1>Расписание недоступно</h1>
+                <span>Расписание оказалось недоступным во время последней проверки. Проблема может быть либо в лежачем расписании, либо в прокси, которое сервер использует для получения данных с расписания. Ожидайте следующего обновления информации.</span>
+            </span>
             <div class="navBar">
                 <div class="navBtn toggled" data-href="subjectsSchedule">
                     <img alt="calendar" src="./private/assets/imgs/calendar.svg">
@@ -48,11 +147,6 @@
                 </div>
             </div>
             <div class="componentContainer">
-<!--                <div class="noSubjectsScreen">-->
-<!--                    <img alt="utya3" src="./private/assets/imgs/utya_confused.webp">-->
-<!--                    <div class="h1">Пар не было найдено</div>-->
-<!--                    <div class="h2">Возможно, данные пока не обновились</div>-->
-<!--                </div>-->
                 <div class="loader" data-component-loader></div>
                 <div class="component subjectSchedule"></div>
             </div>
@@ -67,37 +161,71 @@
     </div>
 </body>
 <script src="./private/assets/scripts/spaEvent.js"></script>
-<script async>spaEvent("0")</script>
 <script src="./private/assets/scripts/navRadio.js"></script>
-<script src="./private/assets/scripts/ddown.js"></script>
+<script src="./private/assets/scripts/ddown_dates.js"></script>
 <script src="./private/assets/scripts/raspDownScreen.js"></script>
-<script data-self-remove="1">
-    window.addEventListener("load", () => {
-        let loadingScreen = document.querySelector('.loadingScreen')
-        loadingScreen.style.opacity = 0
-        setTimeout(() => {
-            loadingScreen.remove()
-            setTimeout(() => { document.querySelector('[data-self-remove="1"]').remove() }, 100)
-        }, 250)
-    })
+<script src="./private/assets/scripts/sw.js"></script>
+<script src="./private/assets/scripts/ddown_global.js"></script>
+<script src="./private/assets/scripts/grSearch.js"></script>
+<script>
+    let chgr1 = localStorage.getItem('chgr');
+    let isErr = false
+    if (chgr1 === null) {
+        openSGEvent()
+        closeSG.style.pointerEvents = 'none'
+        closeSG.style.opacity = '0.25'
+        closeSGAvailability = false
+    } else {
+        chgrIDchecker().then(() => {
+            // 2 - checking if the name of the group is invalid
+            if (isErr === false) {
+                fetch(`/api/checkChgrNameValidity?chgr=${chgr1}&chgrName=${localStorage.getItem('chgrName')}`, {
+                    method: 'GET',
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                })
+                    .then(res => res.json())
+                    .then(data => {
+                        isErr = false
+                        if (data.status === 'invalid') {
+                            isErr = true
+                            alert('Ошибка.\n\nОбнаружено некорректное название группы в локальном хранилище. Название группы будет изменено на действительное')
+                            closeSG.style.pointerEvents = 'none'
+                            closeSG.style.opacity = '0.25'
+                            closeSGAvailability = false
+                            localStorage.setItem('chgrName', data.fixedName)
+                            openSG.querySelector('.selectedGr').innerText = data.fixedName
+                            currentGroup.innerText = data.fixedName
+                            currentGroup.style.left = currentGroup.closest('.headerContainer').getBoundingClientRect().width / 2 - currentGroup.getBoundingClientRect().width / 2 + 'px'
+                        }
+                    })
+            }
+        })
+
+        spaEvent(chgr1, 0)
+    }
+    async function chgrIDchecker() {
+        // 1 - checking if the chgr id is invalid
+        await fetch(`/api/spa?chgr=${chgr1}&target=0&chgrValidityCheck=true}`, {
+            method: 'GET',
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+            .then(res => res.json())
+            .then(data => {
+                isErr = false
+                if (data.chgrValidity === 'invalid') {
+                    isErr = true
+                    alert('Ошибка.\n\nУказан некорректный id группы. Будет вызван экран для выбора группы.')
+                    closeSG.style.pointerEvents = 'none'
+                    closeSG.style.opacity = '0.25'
+                    closeSGAvailability = false
+                    openSGEvent()
+                }
+            })
+    }
 </script>
-<script data-self-remove="2">
-    window.addEventListener("load", () => {
-        let headerContainer = document.querySelector('.headerContainer')
-        let downloadButtonHTML =
-            `
-            <img alt="android" src="./private/assets/imgs/android.svg">
-            Скачать .apk
-            `
-        let downloadButtonObject = document.createElement('a')
-        downloadButtonObject.setAttribute("href", "/app")
-        downloadButtonObject.className = 'downloadApp'
-        downloadButtonObject.innerHTML = downloadButtonHTML
-        if ((window.navigator.userAgent.indexOf("Android") > -1 && window.navigator.userAgent.indexOf("Build") > -1 ) !== true) {
-            if (window.navigator.userAgent.indexOf("Win64") > -1)  { return }
-            headerContainer.appendChild(downloadButtonObject)
-        }
-    })
-    setTimeout(() => { document.querySelector('[data-self-remove="2"]').remove() }, 100)
-</script>
+<script src="./private/assets/scripts/loadScr.js"></script>
 </html>

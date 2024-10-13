@@ -1,30 +1,31 @@
 let isAvailable
-let raspDownScreen = document.querySelector('.raspDownScreen')
-let raspDownWrapper = document.querySelector('.raspDownWrapper')
-let closeRaspDownBtn = document.querySelector('.closeRaspDownBtn')
-fetch('/api/status', {
-    method: 'GET',
-    headers: {
-        'X-Requested-With': 'XMLHttpRequest'
-    }
-})
-    .then(res => res.text())
-    .then(data => isAvailable = data)
-    .then(availCheck)
+let date = document.querySelector('.date')
+let raspDownHint = document.querySelector('.raspDownHint')
+
 
 function availCheck() {
     if (isAvailable === 'false') {
-        raspDownScreen.style.opacity = '1'
-        raspDownScreen.style.pointerEvents = 'auto'
-        closeRaspDownBtn.addEventListener('click', () => {
-            raspDownScreen.style.opacity = '0'
-            raspDownWrapper.style.transform = 'scale(0.95)'
-            setTimeout(() => {
-                raspDownScreen.remove()
-            }, 250)
-        })
-    } else if (isAvailable === 'true' || isAvailable === "") {
-        raspDownScreen.remove()
+        date.classList.add('unavailable')
+        date.addEventListener('mouseover', showRaspDownHint)
+        date.addEventListener('mouseout', hideRaspDownHint)
+        setTimeout(() => {
+            date.classList.add('triggered')
+        }, 250)
+    } else {
+        date.classList.remove('unavailable')
+        date.removeEventListener('mouseover', showRaspDownHint)
+        date.removeEventListener('mouseout', hideRaspDownHint)
+        date.classList.remove('triggered')
     }
+}
+
+function showRaspDownHint() {
+    raspDownHint.style.opacity = '1'
+    raspDownHint.style.left = date.getBoundingClientRect().left + date.getBoundingClientRect().width / 2 - raspDownHint.getBoundingClientRect().width / 2
+    raspDownHint.style.top = date.getBoundingClientRect().top - raspDownHint.scrollHeight - 10
+}
+
+function hideRaspDownHint() {
+    raspDownHint.style.opacity = '0'
 }
 

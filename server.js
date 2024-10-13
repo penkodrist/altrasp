@@ -35,18 +35,21 @@ let processedData = ``
 
 let newDate
 let updateDate
-fsp.readFile(path.join(__dirname, `updateDate.txt`), 'utf8').then(data => updateDate = data)
 
 let isAvailable
 
 let reqHTML
 let resData
+let chgrValidity
 
-let targetUrl = 'https://bincol.ru/rasp/view.php?id=00301'
-let connectionInterval = 300000
-let axiosTimeout = 40000
+let targetUrl = ''
+let connectionInterval = 7000
+let axiosTimeout = 6500
 let serverPort = 3000
 let socksUrl = 'socks5://zXhBvW:CBKHfx@88.218.73.128:9426'
+let cyclesIndex = 0
+let gid
+let gJSONData
 
 const agent = new SocksProxyAgent(socksUrl)
 const axiosInstance = axios.create({
@@ -80,7 +83,6 @@ consoleLog(infoLabel, "Server started")
 app.listen(serverPort, function () {
     consoleLog(successLabel, `Server successfully started on port: ${String(serverPort).bold}`)
 })
-
 const checkValidity = (req, res, next) => {
     if (req.headers['x-requested-with'] === 'XMLHttpRequest') {
         next()
@@ -102,17 +104,23 @@ app.get('*', async (req, res, next) => {
 })
 app.get('/api/spa', checkValidity, async (req, res) => {
     try {
-        reqHTML = await fsp.readFile(path.join(__dirname, 'site', 'private', 'components', `${req.query.target}.html`), 'utf8')
+        chgrValidity = ''
+        reqHTML = await fsp.readFile(path.join(__dirname, 'site', 'private', 'components', String(req.query.chgr), `${req.query.target}.html`), 'utf8')
+        if (String(req.query.chgr) !== 'essential') {
+            updateDate = await fsp.readFile(path.join(__dirname, 'site', 'private', 'components', String(req.query.chgr), 'updateDate.txt'), 'utf8')
+        }
         sendData()
     } catch (err) {
-        consoleLog(errorLabel, `Client tried to make fetch(), but it was incorrect...? Aborted: ${req.ip}`)
+        consoleLog(errorLabel, `Incoming SPA request is invalid. Aborted: ${err}`)
         reqHTML = await fsp.readFile(path.join(__dirname, 'site', 'private', 'components', '404.html'), 'utf8')
+        chgrValidity = 'invalid'
         sendData()
     }
     function sendData() {
         resData = {
             html: reqHTML,
-            updateDate: updateDate
+            updateDate: updateDate,
+            chgrValidity: chgrValidity
         }
         res.send(resData)
     }
@@ -124,6 +132,39 @@ app.get('/api/status', checkValidity, (req, res) => {
         consoleLog(errorLabel, `Incorrect GET was sent, aborted! IP-address of GET: ${req.ip}`)
     }
 })
+app.get('/api/groups', checkValidity, async (req, res) => {
+    try {
+        res.send(await fsp.readFile(path.join(__dirname, 'site', 'private', 'components', 'groups.html'), 'utf8'))
+    } catch (err) {
+        consoleLog(errorLabel, `Error when trying to read groups list or someone tried to send GET request without header. Server is shut down: ${err}`)
+        process.exit()
+    }
+})
+app.get('/api/checkChgrNameValidity', checkValidity, async (req, res) => {
+    try {
+        let parsedJson
+        let chgrID = req.query.chgr
+        let chgrNAME = req.query.chgrName
+        let fixedData
+        try {
+            await fsp.readFile('bincol_groups.json', 'utf8').then(data => {
+                parsedJson = JSON.parse(data)
+                if (parsedJson[chgrID] !== chgrNAME) {
+                    throw err
+                }
+            })
+        } catch (err) {
+            fixedData = {
+                status: "invalid",
+                fixedName: parsedJson[chgrID]
+            }
+            res.send(fixedData)
+        }
+    } catch (err) {
+        consoleLog(errorLabel, `Error checking CHGR validity. Either file cannot be read or requested object was not found in JSON: ${err}`)
+    }
+
+})
 app.get('/app', (req, res) => {
     try {
         res.sendFile(path.join(__dirname, 'site', 'app.html'))
@@ -132,21 +173,53 @@ app.get('/app', (req, res) => {
     }
 })
 
-fetchSite(targetUrl).then((err) => {
-    if (!err) {
-        parseData(data).then((err) => {
-            if (!err) {
-                formComponents()
+readJsonTest().then((data) => {
+    let doesExist
+    gJSONData = data
+    for (let i = 0; i <= Object.keys(JSON.parse(data)).length ; i++) {
+        gid = Object.keys(JSON.parse(data))[i]
+        try {
+            doesExist = fs.existsSync(path.join(__dirname, 'site', 'private', 'components', gid))
+        } catch (err) {
+            if (!(String(err).startsWith('TypeError'))) {
+                consoleLog(errorLabel, `Error when making directory ${gid}: ${err}`)
             }
-        })
+        }
+        if (!doesExist) {
+            try {
+                fs.mkdir(path.join(__dirname, 'site', 'private', 'components', gid), () => {})
+            } catch (err) {
+                if (!(String(err).startsWith('TypeError'))) {
+                    consoleLog(errorLabel, `Error when making directory ${gid}: ${err}`)
+                }
+            }
+        }
     }
-})
-setInterval(() => {
+}).then(formGroupsHtml)
+async function readJsonTest() {
+    return await fsp.readFile(path.join(__dirname, 'bincol_groups.json'), 'utf8')
+}
+function formGroupsHtml() {
+    let formedGroups = ''
+    for (let i = 0; i < Object.keys(JSON.parse(gJSONData)).length ; i++) {
+        formedGroups += `<div class="sg-group" chgr="${Object.keys(JSON.parse(gJSONData))[i]}">${Object.values(JSON.parse(gJSONData))[i]}</div>`
+    }
+    fs.writeFile(path.join(__dirname, 'site', 'private', 'components', 'groups.html'), formedGroups, () => {})
+}
+
+setTimeout(() => {
+    if (cyclesIndex === 80) {
+        cyclesIndex = 0
+    }
+    gid = Object.keys(JSON.parse(gJSONData))[cyclesIndex]
+    targetUrl = `https://bincol.ru/rasp/view.php?id=${gid}`
+    cyclesIndex++
     fetchSite(targetUrl).then((err) => {
         if (!err) {
-            parseData(data).then((err) => {
+            parseData(data, gid).then((err) => {
                 if (!err) {
-                    formComponents()
+                    formComponents(gid)
+                    cyclesIndex++
                 }
             })
         }
@@ -172,12 +245,12 @@ async function fetchSite(url) {
         return err
     }
 }
-async function parseData(data) {
+async function parseData(data, gidValue) {
     dom = new JSDOM(data);
     const doc = dom.window.document
     dBTBody = doc.body.querySelector('table tbody')
     if (dBTBody === null) {
-        consoleLog(errorLabel, 'Caught data being null. Waiting next parse in 5 minutes.')
+        consoleLog(errorLabel, `${String(gidValue).bold} - Caught data being null. Waiting next parse in 5 minutes.`)
         isAvailable = false
         return err = "err"
     }
@@ -236,17 +309,9 @@ async function parseData(data) {
         }
     })
 }
-function formComponents() {
+function formComponents(gidValue) {
+    consoleLog(infoLabel, `${String(gidValue).bold} - Writing new info to a group...`)
     dateIndex = new Date().getDay()
-    newDate = new Date()
-    updateDate = `${String(newDate.getDate()).padStart(2, '0')}.${String(newDate.getMonth() + 1).padStart(2, '0')}.${String(newDate.getFullYear())} ${String(newDate.getHours()).padStart(2, '0')}:${String(newDate.getMinutes()).padStart(2, '0')} (GMT+3)`
-    fs.writeFile(path.join(__dirname, 'updateDate.txt'), updateDate, (err) => {
-        if (err) {
-            consoleLog(errorLabel, `Update date was not written: ${err}`)
-        } else {
-            consoleLog(successLabel, 'Update date was successfully written')
-        }
-    })
     for (let i = 0; i < Object.keys(subjectsArray).length; i++) {
         formedData = ``
         processedData = ``
@@ -302,7 +367,7 @@ function formComponents() {
                 </div>
                 `
         }
-        fs.writeFileSync(`./site/private/components/${i}.html`, formedData, (err) => {
+        fs.writeFileSync(`./site/private/components/${gidValue}/${i}.html`, formedData, (err) => {
             if (err) {
                 consoleLog(errorLabel, `File was not written: ${err}`)
             }
@@ -313,7 +378,16 @@ function formComponents() {
             dateIndex++
         }
     }
-    consoleLog(successLabel, `Fetch script ended, recorded updateDate: ${updateDate.bold}`)
+    newDate = new Date()
+    updateDate = `${String(newDate.getDate()).padStart(2, '0')}.${String(newDate.getMonth() + 1).padStart(2, '0')}.${String(newDate.getFullYear())} ${String(newDate.getHours()).padStart(2, '0')}:${String(newDate.getMinutes()).padStart(2, '0')}:${String(newDate.getSeconds()).padStart(2, '0')} (GMT+3)`
+    fs.writeFile(`./site/private/components/${gidValue}/updateDate.txt`, updateDate, (err) => {
+        if (err) {
+            consoleLog(errorLabel, `${String(gidValue).bold} - Update date was not written: ${err}`)
+        } else {
+            consoleLog(successLabel, `${String(gidValue).bold} - Update date was successfully written`)
+        }
+    })
+    consoleLog(successLabel, `${String(gidValue).bold} - Fetch script ended, recorded updateDate: ${updateDate.bold}`)
 }
 function formDate(index) {
     return `${weekdays[index]}`
