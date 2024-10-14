@@ -43,8 +43,8 @@ let resData
 let chgrValidity
 
 let targetUrl = ''
-let connectionInterval = 7000
-let axiosTimeout = 6500
+let connectionInterval = 6000
+let axiosTimeout = 5500
 let serverPort = 3000
 let socksUrl = 'socks5://zXhBvW:CBKHfx@88.218.73.128:9426'
 let cyclesIndex = 0
@@ -207,13 +207,13 @@ function formGroupsHtml() {
     fs.writeFile(path.join(__dirname, 'site', 'private', 'components', 'groups.html'), formedGroups, () => {})
 }
 
-setTimeout(() => {
+setInterval(() => {
     if (cyclesIndex === 80) {
         cyclesIndex = 0
     }
+    cyclesIndex++
     gid = Object.keys(JSON.parse(gJSONData))[cyclesIndex]
     targetUrl = `https://bincol.ru/rasp/view.php?id=${gid}`
-    cyclesIndex++
     fetchSite(targetUrl).then((err) => {
         if (!err) {
             parseData(data, gid).then((err) => {
