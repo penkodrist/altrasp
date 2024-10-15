@@ -104,11 +104,11 @@
                             <div class="sw-option-content">
                                 <div class="sw-option-option">
                                     <div class="soo-header">Версия</div>
-                                    <div class="soo-desc">0.10.0</div>
+                                    <div class="soo-desc" data-ver></div>
                                 </div>
                                 <div class="sw-option-option">
                                     <div class="soo-header">Билд</div>
-                                    <div class="soo-desc">29</div>
+                                    <div class="soo-desc" data-build></div>
                                 </div>
                                 <div class="sw-option-option">
                                     <div class="soo-header">GitHub</div>
@@ -228,4 +228,10 @@
     }
 </script>
 <script src="./private/assets/scripts/loadScr.js"></script>
+<script async>
+    let ver = document.querySelector('[data-ver]')
+    let build = document.querySelector('[data-build]')
+    ver.innerText = '0.10.1'
+    build.innerText = '30'
+</script>
 </html>

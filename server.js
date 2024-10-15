@@ -212,15 +212,16 @@ function formGroupsHtml() {
 setInterval(() => {
     if (cyclesIndex === 80) {
         cyclesIndex = 0
+        consoleLog(infoLabel, `Parsing cycle has completed. Restarting the cycle.`)
     }
     gid = Object.keys(JSON.parse(gJSONData))[cyclesIndex]
     targetUrl = `https://bincol.ru/rasp/view.php?id=${gid}`
+    consoleLog(infoLabel, `Current cyclesIndex is ${String(cyclesIndex).bold}`)
     fetchSite(targetUrl).then((err) => {
         if (!err) {
             parseData(data, gid).then((err) => {
                 if (!err) {
                     formComponents(gid)
-                    cyclesIndex++
                 }
             })
         }
