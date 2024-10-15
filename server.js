@@ -211,7 +211,6 @@ setInterval(() => {
     if (cyclesIndex === 80) {
         cyclesIndex = 0
     }
-    cyclesIndex++
     gid = Object.keys(JSON.parse(gJSONData))[cyclesIndex]
     targetUrl = `https://bincol.ru/rasp/view.php?id=${gid}`
     fetchSite(targetUrl).then((err) => {
@@ -224,6 +223,7 @@ setInterval(() => {
             })
         }
     })
+    cyclesIndex++
 }, connectionInterval)
 
 async function fetchSite(url) {
@@ -238,7 +238,7 @@ async function fetchSite(url) {
     } catch (err) {
         isAvailable = false
         if (err) {
-            consoleLog(errorLabel, `Unknown error or proxy is unreachable. Error code: ${err.code}`)
+            consoleLog(errorLabel, `Unknown error or proxy is unreachable. Error code: ${err.code}; Error: ${err}`)
         } else if (err.code === "ECONNABORTED") {
             consoleLog(errorLabel, 'Connection has timed out')
         }
