@@ -180,6 +180,7 @@ readJsonTest().then((data) => {
         gid = Object.keys(JSON.parse(data))[i]
         try {
             doesExist = fs.existsSync(path.join(__dirname, 'site', 'private', 'components', gid))
+            consoleLog(infoLabel, `${String(gid).bold} already exists`)
         } catch (err) {
             if (!(String(err).startsWith('TypeError'))) {
                 consoleLog(errorLabel, `Error when making directory ${gid}: ${err}`)
@@ -188,6 +189,7 @@ readJsonTest().then((data) => {
         if (!doesExist) {
             try {
                 fs.mkdir(path.join(__dirname, 'site', 'private', 'components', gid), () => {})
+                consoleLog(infoLabel, `${String(gid).bold} - creating directory`)
             } catch (err) {
                 if (!(String(err).startsWith('TypeError'))) {
                     consoleLog(errorLabel, `Error when making directory ${gid}: ${err}`)
