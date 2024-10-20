@@ -30,8 +30,9 @@ async function resolvingUserAgent() {
     downloadButtonObject.setAttribute("href", "/app")
     downloadButtonObject.className = 'downloadApp'
     downloadButtonObject.innerHTML = downloadButtonHTML
-    if ((window.navigator.userAgent.indexOf("Android") > -1 && window.navigator.userAgent.indexOf("Build") > -1 ) !== true) {
+    if ((window.navigator.userAgent.indexOf("Android") > -1 && window.navigator.userAgent.indexOf("Build") > -1 ) === false) {
         if (window.navigator.userAgent.indexOf("Win64") > -1)  { return }
+        if (window.navigator.userAgent.indexOf("Mac OS") > -1)  { return }
         headerContainer.appendChild(downloadButtonObject)
     }
     if (window.navigator.userAgent.indexOf("Build") > -1) {

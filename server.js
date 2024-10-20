@@ -20,7 +20,7 @@ function consoleLog(errorType, message) {
     console.log(`[ ${logDateString.bold} ] ${errorType} ${message}`)
 }
 
-let dom, dBTBody, subjRow
+let dom, doc, dBTBody, subjRow
 let subjNum, subjName, subjAuditory, subjTeacher, subjGroup
 let curTd
 let subjectsArray = {}
@@ -209,7 +209,7 @@ function formGroupsHtml() {
     fs.writeFile(path.join(__dirname, 'site', 'private', 'components', 'groups.html'), formedGroups, () => {})
 }
 
-setInterval(() => {
+setTimeout(() => {
     if (cyclesIndex === 80) {
         cyclesIndex = 0
         consoleLog(infoLabel, `Parsing cycle has completed. Restarting the cycle.`)
@@ -250,7 +250,7 @@ async function fetchSite(url) {
 }
 async function parseData(data, gidValue) {
     dom = new JSDOM(data);
-    const doc = dom.window.document
+    doc = dom.window.document
     dBTBody = doc.body.querySelector('table tbody')
     if (dBTBody === null) {
         consoleLog(errorLabel, `${String(gidValue).bold} - Caught data being null. Waiting next parse in 5 minutes.`)
@@ -311,6 +311,7 @@ async function parseData(data, gidValue) {
             rowIndex++
         }
     })
+    dom.window.close()
 }
 function formComponents(gidValue) {
     consoleLog(infoLabel, `${String(gidValue).bold} - Writing new info to a group...`)

@@ -1,7 +1,7 @@
 let openSG = document.querySelector('.chgr-screen-btn')
 let closeSG = document.querySelector('.sg-close-btn')
 let sgScreenWrapper = document.querySelector('.selectGroupScreenWrapper')
-let searchField = document.querySelector('.sg-search-field')
+let searchField = document.querySelector('.sg-search-field input')
 let groupsLoader = document.querySelector('.sg-groups-loader')
 let groupsContainer = document.querySelector('.sg-groups-container')
 let allGroups
@@ -12,7 +12,7 @@ openSG.addEventListener('click', openSGEvent)
 closeSG.addEventListener('click', closeSGEventSpec)
 let closeSGAvailability = true
 searchField.addEventListener('input', function () {
-    searchGroups(this.querySelector('input').value)
+    searchGroups(this.value)
 })
 function searchGroups(requestText) {
     clearTimeout(typingTimeout)
@@ -33,6 +33,7 @@ function searchGroups(requestText) {
     }, 300)
 }
 function openSGEvent() {
+    searchField.value = ''
     sgScreenWrapper.classList.add('toggled')
     groupsLoader.style.opacity = '1'
     groupsContainer.style.opacity = '0'

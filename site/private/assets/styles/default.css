@@ -373,6 +373,10 @@ html, body {
             top: 0;
             h1 {
                 margin-bottom: 7px;
+                color: var(--app-global-btn-active-text)
+            }
+            span {
+                color: var(--app-global-btn-active-text)
             }
         }
         .headerContainer, .navBar {

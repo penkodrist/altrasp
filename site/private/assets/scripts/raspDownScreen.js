@@ -6,15 +6,15 @@ let raspDownHint = document.querySelector('.raspDownHint')
 function availCheck() {
     if (isAvailable === 'false') {
         date.classList.add('unavailable')
-        date.addEventListener('mouseover', showRaspDownHint)
-        date.addEventListener('mouseout', hideRaspDownHint)
+        date.addEventListener('mouseenter', showRaspDownHint)
+        date.addEventListener('mouseleave', hideRaspDownHint)
         setTimeout(() => {
             date.classList.add('triggered')
         }, 250)
     } else {
         date.classList.remove('unavailable')
-        date.removeEventListener('mouseover', showRaspDownHint)
-        date.removeEventListener('mouseout', hideRaspDownHint)
+        date.removeEventListener('mouseenter', showRaspDownHint)
+        date.removeEventListener('mouseleave', hideRaspDownHint)
         date.classList.remove('triggered')
     }
 }
