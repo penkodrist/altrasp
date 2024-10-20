@@ -81,7 +81,7 @@ app.use((req, res, next) => {
 })
 consoleLog(infoLabel, "Server started")
 app.listen(serverPort, function () {
-    consoleLog(successLabel, `Server successfully started on port: ${String(serverPort).bold}`)
+    // consoleLog(successLabel, `Server successfully started on port: ${String(serverPort).bold}`)
 })
 const checkValidity = (req, res, next) => {
     if (req.headers['x-requested-with'] === 'XMLHttpRequest') {
@@ -180,7 +180,7 @@ readJsonTest().then((data) => {
         gid = Object.keys(JSON.parse(data))[i]
         try {
             doesExist = fs.existsSync(path.join(__dirname, 'site', 'private', 'components', gid))
-            consoleLog(infoLabel, `${String(gid).bold} already exists`)
+            // consoleLog(infoLabel, `${String(gid).bold} already exists`)
         } catch (err) {
             if (!(String(err).startsWith('TypeError'))) {
                 consoleLog(errorLabel, `Error when making directory ${gid}: ${err}`)
@@ -189,7 +189,7 @@ readJsonTest().then((data) => {
         if (!doesExist) {
             try {
                 fs.mkdir(path.join(__dirname, 'site', 'private', 'components', gid), () => {})
-                consoleLog(infoLabel, `${String(gid).bold} - creating directory`)
+                // consoleLog(infoLabel, `${String(gid).bold} - creating directory`)
             } catch (err) {
                 if (!(String(err).startsWith('TypeError'))) {
                     consoleLog(errorLabel, `Error when making directory ${gid}: ${err}`)
@@ -209,14 +209,14 @@ function formGroupsHtml() {
     fs.writeFile(path.join(__dirname, 'site', 'private', 'components', 'groups.html'), formedGroups, () => {})
 }
 
-setTimeout(() => {
+setInterval(() => {
     if (cyclesIndex === 80) {
         cyclesIndex = 0
         consoleLog(infoLabel, `Parsing cycle has completed. Restarting the cycle.`)
     }
     gid = Object.keys(JSON.parse(gJSONData))[cyclesIndex]
     targetUrl = `https://bincol.ru/rasp/view.php?id=${gid}`
-    consoleLog(infoLabel, `Current cyclesIndex is ${String(cyclesIndex).bold}`)
+    // consoleLog(infoLabel, `Current cyclesIndex is ${String(cyclesIndex).bold}`)
     fetchSite(targetUrl).then((err) => {
         if (!err) {
             parseData(data, gid).then((err) => {
@@ -231,13 +231,13 @@ setTimeout(() => {
 
 async function fetchSite(url) {
     try {
-        consoleLog(infoLabel, `Trying to receive HTML from: ${url.green.underline}`)
+        // consoleLog(infoLabel, `Trying to receive HTML from: ${url.green.underline}`)
         const response = await axiosInstance.get(url, {
             timeout: axiosTimeout
         })
         data = response.data
         isAvailable = true
-        consoleLog(successLabel, 'Data received.')
+        // consoleLog(successLabel, 'Data received.')
     } catch (err) {
         isAvailable = false
         if (err) {
@@ -314,7 +314,7 @@ async function parseData(data, gidValue) {
     dom.window.close()
 }
 function formComponents(gidValue) {
-    consoleLog(infoLabel, `${String(gidValue).bold} - Writing new info to a group...`)
+    // consoleLog(infoLabel, `${String(gidValue).bold} - Writing new info to a group...`)
     dateIndex = new Date().getDay()
     for (let i = 0; i < Object.keys(subjectsArray).length; i++) {
         formedData = ``
@@ -388,10 +388,10 @@ function formComponents(gidValue) {
         if (err) {
             consoleLog(errorLabel, `${String(gidValue).bold} - Update date was not written: ${err}`)
         } else {
-            consoleLog(successLabel, `${String(gidValue).bold} - Update date was successfully written`)
+            consoleLog(successLabel, `${String(gidValue).bold} - Update date was successfully written: ${updateDate.bold}`)
         }
     })
-    consoleLog(successLabel, `${String(gidValue).bold} - Fetch script ended, recorded updateDate: ${updateDate.bold}`)
+    // consoleLog(successLabel, `${String(gidValue).bold} - Fetch script ended, recorded updateDate: ${updateDate.bold}`)
 }
 function formDate(index) {
     return `${weekdays[index]}`
