@@ -1,0 +1,240 @@
+<html lang=en theme="nord">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <title>AltRasp</title>
+    <link href="private/assets/styles-old/default.css" rel="stylesheet">
+    <link rel="apple-touch-icon" sizes="180x180" href="./private/assets/imgs/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="./private/assets/imgs/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="./private/assets/imgs/favicon-16x16.png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+    <script>
+        window.location.href = '/'
+    </script>
+</head>
+<body>
+    <div class="appDiv">
+        <div class="loadingScreen">
+            <img alt="logoMin" src="./private/assets/imgs/logo_min.svg">
+            <img alt="logoLoader" src="../../!TESTS/gigglesFtp/assets/public/imgs/ring-resize.svg">
+            <div class="longLoad">
+                Еще немного...
+            </div>
+        </div>
+        <div class="ddDateScreenWrapper"></div>
+        <div class="ddGlobalScreenWrapper"></div>
+        <div class="selectGroupScreenWrapper">
+            <div class="selectGroupContainer">
+                <div class="sg-header-container">
+                    <div class="sg-header">
+                        <div class="sg-text">Выберите группу</div>
+                        <div class="sg-last-indexing">
+                            <span>Последняя индексация групп: </span>
+                            <span>7 октября</span>
+                        </div>
+                    </div>
+                    <div class="sg-close-btn">Закрыть</div>
+                </div>
+                <label class="sg-search-field">
+                    <input type="text" placeholder="Поиск" tabindex="0">
+                </label>
+                <div class="sg-groups-container-wrapper">
+                    <div class="sg-groups-loader">
+                        <img alt="loader" src="../../!TESTS/gigglesFtp/assets/public/imgs/ring-resize.svg">
+                    </div>
+                    <div class="sg-groups-container"></div>
+                </div>
+            </div>
+        </div>
+        <div class="settingsScreenWrapper">
+            <div class="settingsWindow">
+                <div class="sw-header">
+                    <span>Настройки</span>
+                    <span class="closeSW">Закрыть</span>
+                </div>
+                <div class="sw-options">
+                    <div class="sw-option-wrapper">
+                        <div class="sw-option">
+                            Внешний вид
+                            <img class="collapse" alt="collapse" src="./private/assets/imgs/collapse.svg">
+                        </div>
+                        <div class="sw-option-content-wrapper">
+                            <div class="sw-option-content">
+                                <div class="sw-option-option">
+                                    <div class="soo-header">Тема</div>
+                                    <div class="soo-desc">Цветовая схема, которая будет использоваться на сайте</div>
+                                    <div class="soo-inter">
+                                        <div class="gl-dd" dd-this-layer="31" dd-type="themes" dd-ls-name="sel-theme">
+                                            <span class="selected-gl-dd">Nord (по умолчанию)</span>
+                                            <span class="collapse-icon">
+                                                <img alt="collapse-dd" src="./private/assets/imgs/collapse.svg">
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="sw-option-wrapper">
+                        <div class="sw-option">
+                            Настройки расписания
+                            <img class="collapse" alt="collapse" src="./private/assets/imgs/collapse.svg">
+                        </div>
+                        <div class="sw-option-content-wrapper">
+                            <div class="sw-option-content">
+                                <div class="sw-option-option">
+                                    <div class="soo-header">Выбранная группа</div>
+                                    <div class="soo-desc">Группа, которую Вы выбираете для отображения на сайте при загрузке. После выбора группы расписание будет обновлено.</div>
+                                    <div class="soo-inter">
+                                        <div class="chgr-screen-btn">
+                                            <span class="selectedGr">31БТС</span>
+                                            <span class="collapse-icon">
+                                                <img alt="collapse" src="./private/assets/imgs/collapse.svg">
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="sw-option-wrapper">
+                        <div class="sw-option">
+                            О сайте
+                            <img class="collapse" alt="collapse" src="./private/assets/imgs/collapse.svg">
+                        </div>
+                        <div class="sw-option-content-wrapper">
+                            <div class="sw-option-content">
+                                <div class="sw-option-option">
+                                    <div class="soo-header">Версия</div>
+                                    <div class="soo-desc" data-ver></div>
+                                </div>
+                                <div class="sw-option-option">
+                                    <div class="soo-header">Билд</div>
+                                    <div class="soo-desc" data-build></div>
+                                </div>
+                                <div class="sw-option-option">
+                                    <div class="soo-header">GitHub</div>
+                                    <a href="https://github.com/penkodrist/altrasp" class="soo-desc">Ссылка</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="verticalLayoutWrapper">
+            <div class="headerContainer">
+                <div class="logo">
+                    <img alt="logo" src="./private/assets/imgs/logo_min.svg">
+                    AltRasp
+                </div>
+                <div class="openSW">
+                    <img alt="settings" src="./private/assets/imgs/settings.svg">
+                </div>
+                <div class="currentGroup"></div>
+            </div>
+            <span class="raspDownHint">
+                <h1>Расписание недоступно</h1>
+                <span>Расписание оказалось недоступным во время последней проверки. Проблема может быть либо в лежачем расписании, либо в прокси, которое сервер использует для получения данных с расписания. Ожидайте следующего обновления информации.</span>
+            </span>
+            <div class="navBar">
+                <div class="navBtn toggled" data-href="subjectsSchedule">
+                    <img alt="calendar" src="./private/assets/imgs/calendar.svg">
+                    Расписание занятий
+                    <img alt="down" src="./private/assets/imgs/down.svg">
+                </div>
+                <div class="navBtn" data-href="subjectsCalls" spa-target="rb">
+                    <img alt="bell" src="./private/assets/imgs/bell.svg">
+                    Расписание звонков
+                </div>
+            </div>
+            <div class="componentContainer">
+                <div class="loader" data-component-loader></div>
+                <div class="component subjectSchedule"></div>
+            </div>
+            <div class="latestInfo">
+                <span class="latestText">Информация за</span>
+                <span class="latestDate">
+                    <span class="loader" data-update-date-loader></span>
+                    <span class="date" data-update-date>0</span>
+                </span>
+            </div>
+        </div>
+    </div>
+</body>
+<script src="private/assets/scripts-old/spaEvent.js"></script>
+<script src="private/assets/scripts-old/navRadio.js"></script>
+<script src="private/assets/scripts-old/ddown_dates.js"></script>
+<script src="private/assets/scripts-old/raspDownScreen.js"></script>
+<script src="private/assets/scripts-old/sw.js"></script>
+<script src="private/assets/scripts-old/ddown_global.js"></script>
+<script src="private/assets/scripts-old/grSearch.js"></script>
+<script>
+    let chgr1 = localStorage.getItem('chgr');
+    let isErr = false
+    if (chgr1 === null) {
+        openSGEvent()
+        closeSG.style.pointerEvents = 'none'
+        closeSG.style.opacity = '0.25'
+        closeSGAvailability = false
+    } else {
+        chgrIDchecker().then(() => {
+            // 2 - checking if the name of the group is invalid
+            if (isErr === false) {
+                fetch(`/api/checkChgrNameValidity?chgr=${chgr1}&chgrName=${localStorage.getItem('chgrName')}`, {
+                    method: 'GET',
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                })
+                    .then(res => res.json())
+                    .then(data => {
+                        isErr = false
+                        if (data.status === 'invalid') {
+                            isErr = true
+                            alert('Ошибка.\n\nОбнаружено некорректное название группы в локальном хранилище. Название группы будет изменено на действительное')
+                            closeSG.style.pointerEvents = 'none'
+                            closeSG.style.opacity = '0.25'
+                            closeSGAvailability = false
+                            localStorage.setItem('chgrName', data.fixedName)
+                            openSG.querySelector('.selectedGr').innerText = data.fixedName
+                            currentGroup.innerText = data.fixedName
+                            currentGroup.style.left = currentGroup.closest('.headerContainer').getBoundingClientRect().width / 2 - currentGroup.getBoundingClientRect().width / 2 + 'px'
+                        }
+                    })
+            }
+        })
+
+        spaEvent(chgr1, 0)
+    }
+    async function chgrIDchecker() {
+        // 1 - checking if the chgr id is invalid
+        await fetch(`/api/spa?chgr=${chgr1}&target=0&chgrValidityCheck=true}`, {
+            method: 'GET',
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+            .then(res => res.json())
+            .then(data => {
+                isErr = false
+                if (data.chgrValidity === 'invalid') {
+                    isErr = true
+                    alert('Ошибка.\n\nУказан некорректный id группы. Будет вызван экран для выбора группы.')
+                    closeSG.style.pointerEvents = 'none'
+                    closeSG.style.opacity = '0.25'
+                    closeSGAvailability = false
+                    openSGEvent()
+                }
+            })
+    }
+</script>
+<script src="private/assets/scripts-old/loadScr.js"></script>
+<script async>
+    let ver = document.querySelector('[data-ver]')
+    let build = document.querySelector('[data-build]')
+    ver.innerText = '0.10.2'
+    build.innerText = '31'
+</script>
+</html>

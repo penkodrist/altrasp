@@ -43,10 +43,10 @@ let resData
 let chgrValidity
 
 let targetUrl = ''
-let connectionInterval = 6000
-let axiosTimeout = 5500
+let connectionInterval = 10000000
+let axiosTimeout = 999
 let serverPort = 3000
-let socksUrl = 'socks5://zXhBvW:CBKHfx@88.218.73.128:9426'
+let socksUrl = 'socks5://127.0.0.1:2080'
 let cyclesIndex = 0
 let gid
 let gJSONData
@@ -62,7 +62,7 @@ app.use('/private', checkReferer, express.static(path.join(__dirname, 'private')
 function checkReferer(req, res, next) {
     const referer = req.get('Referer');
     if (!referer) {
-        return res.status(403).sendFile(path.join(__dirname, 'site', 'private', 'components', '403.html'));
+        return res.redirect('/')
     }
     next();
 }
@@ -97,7 +97,7 @@ app.get('*', async (req, res, next) => {
     }
     if (req.url === '/app') { isErr = null }
     if (isErr) {
-        res.status(404).sendFile(path.join(__dirname, 'site', 'private', 'components', '404gl.html'))
+        res.redirect('/')
     } else {
         next()
     }
@@ -132,7 +132,7 @@ app.get('/api/status', checkValidity, (req, res) => {
         consoleLog(errorLabel, `Incorrect GET was sent, aborted! IP-address of GET: ${req.ip}`)
     }
 })
-app.get('/api/groups', checkValidity, async (req, res) => {
+app.get('/api/groups-legacy', checkValidity, async (req, res) => {
     try {
         res.send(await fsp.readFile(path.join(__dirname, 'site', 'private', 'components', 'groups.html'), 'utf8'))
     } catch (err) {
@@ -163,7 +163,9 @@ app.get('/api/checkChgrNameValidity', checkValidity, async (req, res) => {
     } catch (err) {
         consoleLog(errorLabel, `Error checking CHGR validity. Either file cannot be read or requested object was not found in JSON: ${err}`)
     }
-
+})
+app.get('/api/groups', checkValidity, async (req, res) => {
+    res.send(await fsp.readFile(path.join(__dirname, 'bincol_groups.json'), 'utf8'))
 })
 app.get('/app', (req, res) => {
     try {
@@ -172,7 +174,6 @@ app.get('/app', (req, res) => {
         consoleLog(errorLabel, `Incorrect GET was sent, aborted! IP-address of GET: ${req.ip}`)
     }
 })
-
 readJsonTest().then((data) => {
     let doesExist
     gJSONData = data
@@ -324,8 +325,8 @@ function formComponents(gidValue) {
                 `
             <div class="scheduleSubjectItem">
                         <div class="subjectCounterSide">
-                            <div class="subjectCounter-part1">${subjectsArray[formDate(dateIndex)][String(j)]["subjNum"]}</div>
-                            <div class="subjectCounter-part2"></div>
+                            <div class="part1">${subjectsArray[formDate(dateIndex)][String(j)]["subjNum"]}</div>
+                            <div class="part2"></div>
                         </div>
                         <div class="subjectInfo">
                             <div class="subjectName">${subjectsArray[formDate(dateIndex)][String(j)]["subjName"]}</div>
@@ -383,7 +384,7 @@ function formComponents(gidValue) {
         }
     }
     newDate = new Date()
-    updateDate = `${String(newDate.getDate()).padStart(2, '0')}.${String(newDate.getMonth() + 1).padStart(2, '0')}.${String(newDate.getFullYear())} ${String(newDate.getHours()).padStart(2, '0')}:${String(newDate.getMinutes()).padStart(2, '0')}:${String(newDate.getSeconds()).padStart(2, '0')} (GMT+3)`
+    updateDate = `${String(newDate.getDate()).padStart(2, '0')}.${String(newDate.getMonth() + 1).padStart(2, '0')}.${String(newDate.getFullYear())}<br>${String(newDate.getHours()).padStart(2, '0')}:${String(newDate.getMinutes()).padStart(2, '0')}:${String(newDate.getSeconds()).padStart(2, '0')}`
     fs.writeFile(`./site/private/components/${gidValue}/updateDate.txt`, updateDate, (err) => {
         if (err) {
             consoleLog(errorLabel, `${String(gidValue).bold} - Update date was not written: ${err}`)
