@@ -63,7 +63,7 @@ async function formDayBtns() {
             </div>
             <div class="addInfo">
                 <div class="weekday">${weekdays[curWeekDay]}</div>
-                <div class="fullDate">17.09.2025</div>
+                <div class="fullDate">${String(curDay).padStart(2, '0')}.${String(curMonth).padStart(2, '0')}.${String(curYear)}</div>
             </div>
             <div class="containerBackground"></div>
             <span class="dayReminderLabel">${labels[labelIndex]}</span>

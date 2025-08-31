@@ -38,10 +38,13 @@ document.addEventListener("DOMContentLoaded", () => {
         status.innerText = 'Присвоение выбранной группы'
     }
     async function setDefaults() {
-        if (localStorage.getItem('default') !== '1') {
+        if (localStorage.getItem('default') !== '1' || localStorage.getItem('lastUpdate') !== '0.11.1_33' || !(localStorage.getItem('lastUpdate'))) {
+            localStorage.setItem('lastUpdate', '0.11.1_33')
             localStorage.setItem('sel-theme', 'nord')
             localStorage.setItem('weekday', '0')
             localStorage.setItem('appCustomBackground', 'null')
+            localStorage.setItem('shownDaysCount', 'null')
+            localStorage.setItem('uiRounding', 'null')
             status.innerText = 'Применение настроек по умолчанию'
         }
     }
