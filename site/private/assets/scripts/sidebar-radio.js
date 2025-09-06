@@ -20,6 +20,8 @@ function sidebarRadio(event) {
             dayBtns.forEach(e => {
                 e.classList.remove('active')
             })
+            contentContainer.classList.add('sidebarHidden')
+            menuBtn.classList.remove('active')
             break
         case "settings":
             settingsPage.classList.add('active')

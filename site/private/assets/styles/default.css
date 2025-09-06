@@ -125,7 +125,7 @@ input {
     }
 }
 
-@media screen and (max-width: 850px) {
+@media screen and (max-width: 920px) {
     .appDiv {
         padding: 10px !important;
     }
@@ -182,7 +182,11 @@ input {
             width: 0 !important;
         }
     }
-
+}
+@media screen and (max-width: 484px) {
+    .ringPartGrid {
+        grid-template-columns: 1fr !important;
+    }
 }
 .appDiv {
     display: flex;

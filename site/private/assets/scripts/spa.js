@@ -10,48 +10,47 @@ let fetchDelay = null
 let notifDelay = null
 let activeTarget
 function spaEvent(chgr, target, triggerNotif) {
-    spaSubContainer.classList.add('hidden')
-    loadSpinner.style.opacity = '1'
-    activeTarget = target
-    // хандлер для особенных долбаебов которые захотят часто понажимать на "кнопочки :3"
-    if (!fetchDelay) {
-        fetchDelay = setTimeout(() => innerFn(triggerNotif), 150)
-    } else {
-        clearTimeout(fetchDelay)
-        fetchDelay = null
-        fetchDelay = setTimeout(() => innerFn(triggerNotif), 150)
-    }
-
-    function innerFn(tN) {
+    return new Promise(resolve => {
         spaSubContainer.classList.add('hidden')
         loadSpinner.style.opacity = '1'
-        setTimeout(() => {
-            fetch('/api/status', {
-                method: 'GET',
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest'
+        activeTarget = target
+        // хандлер для особенных долбаебов которые захотят часто понажимать на "кнопочки :3"
+        if (!fetchDelay) {
+            fetchDelay = setTimeout(async () => innerFn(triggerNotif, resolve), 150)
+        } else {
+            clearTimeout(fetchDelay)
+            fetchDelay = null
+            fetchDelay = setTimeout(async () => innerFn(triggerNotif, resolve), 150)
+        }
+    })
+    function innerFn(tN, resolve) {
+        spaSubContainer.classList.add('hidden')
+        loadSpinner.style.opacity = '1'
+        const statusPromise = fetch('/api/status', {
+            method: 'GET',
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+            .then(res => res.text())
+            .then(data => {
+                if (data === 'false') {
+                    lastUpdateDate.closest('.lastUpdateContainer').classList.add('unavailable')
+                    if (tN) {
+                        rdn.classList.add('show')
+                    }
+                    if (!notifDelay) {
+                        notifDelay = setTimeout(() => rdn.classList.remove('show'), 3000)
+                    } else {
+                        clearTimeout(notifDelay)
+                        notifDelay = null
+                        notifDelay = setTimeout(() => rdn.classList.remove('show'), 3000)
+                    }
+                } else {
+                    lastUpdateDate.closest('.lastUpdateContainer').classList.remove('unavailable')
                 }
             })
-                .then(res => res.text())
-                .then(data => {
-                    if (data === 'false') {
-                        lastUpdateDate.closest('.lastUpdateContainer').classList.add('unavailable')
-                        if (tN) {
-                            rdn.classList.add('show')
-                        }
-                        if (!notifDelay) {
-                            notifDelay = setTimeout(() => rdn.classList.remove('show'), 3000)
-                        } else {
-                            clearTimeout(notifDelay)
-                            notifDelay = null
-                            notifDelay = setTimeout(() => rdn.classList.remove('show'), 3000)
-                        }
-                    } else {
-                        lastUpdateDate.closest('.lastUpdateContainer').classList.remove('unavailable')
-                    }
-                })
-        })
-        fetch(`/api/spa?chgr=${chgr}&target=${target}`, {
+        const spaPromise = fetch(`/api/spa?chgr=${chgr}&target=${target}`, {
             method: 'GET',
             headers: {
                 'X-Requested-With': 'XMLHttpRequest'
@@ -59,19 +58,20 @@ function spaEvent(chgr, target, triggerNotif) {
         })
             .then(res => res.json())
             .then(data => {
+                console.log('fetch done')
                 spaSubContainer.innerHTML = data.html;
                 if (data.updateDate !== undefined) {
                     lastUpdateDate.innerHTML = data.updateDate
                 } else {
-                    lastUpdateDate.innerText = 'данные не найдены'
+                    lastUpdateDate.innerText = 'нет данных'
                 }
                 spaSubContainer.classList.remove('hidden')
                 loadSpinner.style.opacity = '0'
             })
+        Promise.all([statusPromise, spaPromise]).then(() => {
+            resolve();
+        });
     }
-}
-function spaEventStartup() {
-    spaEvent(localStorage.getItem('chgr'), '0', true)
 }
 function spaEventUI(event) {
     if (event.target === rbBtn) {

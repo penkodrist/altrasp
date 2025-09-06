@@ -24,10 +24,11 @@ document.addEventListener("DOMContentLoaded", () => {
         })
         .then(formDayBtns)
         .then(setThemeOnStartup)
-        .then(() => {
+        .then(async () => {
             status.innerText = 'Загрузка расписания'
             dayBtns[0].classList.add('active')
-            spaEventStartup(localStorage.getItem('chgr'), '0')
+            await spaEvent(localStorage.getItem('chgr'), '0', true)
+            console.log('spa done')
         })
         .then(() => {
             status.innerText = 'Загрузка завершена'
@@ -38,8 +39,8 @@ document.addEventListener("DOMContentLoaded", () => {
         status.innerText = 'Присвоение выбранной группы'
     }
     async function setDefaults() {
-        if (localStorage.getItem('default') !== '1' || localStorage.getItem('lastUpdate') !== '0.11.1_33' || !(localStorage.getItem('lastUpdate'))) {
-            localStorage.setItem('lastUpdate', '0.11.1_33')
+        // TODO: прописать логику для добавления новых значений при обновлении
+        if (localStorage.getItem('default') !== '1' || !(localStorage.getItem('lastUpdate'))) {
             localStorage.setItem('sel-theme', 'nord')
             localStorage.setItem('weekday', '0')
             localStorage.setItem('appCustomBackground', 'null')
